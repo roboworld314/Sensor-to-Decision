@@ -7,15 +7,17 @@
 
     <div class="video-block card reveal">
       <div class="video-container">
-        <!-- TODO: Replace with your actual demo video in public/videos/ -->
-        <video id="demo-player" controls muted playsinline>
-          <source src="/videos/video1.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        <iframe
+          src="https://drive.google.com/file/d/13B7QXYUWDQpFwqlCcE8yy5_imsg8csdr/preview"
+          width="100%"
+          height="100%"
+          allow="autoplay"
+          allowfullscreen
+          frameborder="0"
+        ></iframe>
       </div>
     </div>
 
-    <!-- TODO: Optionally add a caption or description below the video -->
     <p class="video-caption reveal">
       Full demonstration of the CAV Black Box system operating under varying road conditions, 
       including highway driving, cobblestone roads, and off-road terrain.
@@ -51,15 +53,15 @@
 
   .video-container {
     width: 100%;
+    aspect-ratio: 16 / 9;
     background: #0f0f14;
     line-height: 0;
   }
 
-  .video-container video {
+  .video-container iframe {
     width: 100%;
-    max-height: 1040px;
-    object-fit: contain;
-    background: #0f0f14;
+    height: 100%;
+    border: none;
   }
 
   .video-caption {
