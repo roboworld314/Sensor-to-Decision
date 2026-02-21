@@ -10,8 +10,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // If deploying to a project repo (not username.github.io), also set base:
 // e.g., base: '/your-repo-name/'
 export default defineConfig({
-    site: "https://ja-polin7696.github.io",
-    base: '/',
+    site: "https://roboworld314.github.io",
+    base: '/VibraBox/',
     publicDir: path.join(__dirname, 'public'),
     vite: {
         server: {
