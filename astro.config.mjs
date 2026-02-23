@@ -11,7 +11,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // e.g., base: '/your-repo-name/'
 export default defineConfig({
     site: "https://roboworld314.github.io",
-    base: '/VibraBox/',
+    base: '/Sensor-to-Decision/',
     publicDir: path.join(__dirname, 'public'),
     vite: {
         server: {
