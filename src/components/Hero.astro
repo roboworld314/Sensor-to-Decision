@@ -71,18 +71,17 @@
 .paper-box{
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  flex-wrap:wrap;
-  gap:1rem;
+  justify-content:center;
+  gap:2rem;
 
   width:100%;
-  max-width:1000px;
+  max-width:900px;
   margin:0 auto 2rem auto;
 
-  padding:.9rem 1.5rem;
+  padding:1rem 1.5rem;
 
   background:#f4f4f4;
-  border-radius:20px;
+  border-radius:22px;
   border:1px solid rgba(0,0,0,0.08);
 }
 
@@ -100,26 +99,31 @@
 
 .paper-links{
   display:flex;
-  gap:.6rem;
+  gap:.7rem;
+  align-items:center;
 }
 
 /* Buttons */
-
 .paper-btn{
   background:#223253;
   color:white;
-  padding:.45rem .95rem;
-  border-radius:20px;
-  text-decoration:none;
+
+  min-width:110px;      /* same width */
+  text-align:center;
+
+  padding:.55rem 1rem;
+  border-radius:30px;
+
   font-size:.9rem;
   font-weight:500;
+  text-decoration:none;
+
   transition:all .2s ease;
 }
 
 .paper-btn:hover{
   background:#1a2740;
 }
-
 
 /* ---------------- */
 /* Title */
