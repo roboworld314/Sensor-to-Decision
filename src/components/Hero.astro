@@ -1,30 +1,26 @@
 ---
 // Hero.astro — Title section with paper name
 ---
+
 <section id="hero" class="hero-section">
   <div class="hero-inner">
 
     <!-- Paper banner -->
-   <div class="paper-box">
+    <div class="paper-box">
 
-  <div class="paper-left">
-    <span class="paper-icon">📄</span>
-    <span class="paper-title">Paper & Appendix</span>
-  </div>
+      <div class="paper-left">
+        <span class="paper-icon">📄</span>
+        <span class="paper-title">Paper & Appendix</span>
+      </div>
 
-  <span class="divider">|</span>
+      <div class="paper-links">
+        <a href="/appendix.pdf" class="paper-btn">Appendix</a>
+        <a href="https://github.com/yourrepo" class="paper-btn">Code</a>
+        <a href="/dataset" class="paper-btn">Dataset</a>
+        <a href="/video" class="paper-btn">Video</a>
+      </div>
 
-  <div class="paper-links">
-    <a href="/appendix.pdf">Appendix</a>
-    <span>|</span>
-    <a href="https://github.com/yourrepo">Code</a>
-    <span>|</span>
-    <a href="/dataset">Dataset</a>
-    <span>|</span>
-    <a href="/video">Video</a>
-  </div>
-
-</div>
+    </div>
 
     <h1 class="hero-title">
       SenseGuard: Sensor-to-Decision Adaptation for Reliable Agentic AI Robots
@@ -37,225 +33,47 @@
   </div>
 </section>
 
-<style>
-  .hero-section {
-    padding: 5rem 1.5rem 3rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(192, 94, 60, 0.06) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .hero-inner {
-    position: relative;
-    z-index: 1;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-
-  .hero-badge {
-    display: inline-block;
-    font-family: var(--font-body);
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--color-accent);
-    background: rgba(192, 94, 60, 0.08);
-    border: 1px solid rgba(192, 94, 60, 0.2);
-    padding: 0.4rem 1.2rem;
-    border-radius: 100px;
-    margin-bottom: 2rem;
-  }
-
-  .hero-title {
-    font-family: var(--font-heading);
-    font-size: 3.2rem;
-    font-weight: 400;
-    color: var(--color-primary);
-    line-height: 1.15;
-    margin-bottom: 0.8rem;
-    letter-spacing: -0.02em;
-  }
-
-  .title-main {
-    display: block;
-  }
-
-  .hero-subtitle {
-    font-family: var(--font-body);
-    font-size: 1.35rem;
-    font-weight: 300;
-    color: var(--color-text-muted);
-    line-height: 1.5;
-    max-width: 600px;
-    margin: 0 auto;
-    letter-spacing: 0.01em;
-  }
-
-  .hero-authors {
-    margin-top: 2.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--color-border-light);
-  }
-
-  .hero-authors p {
-    font-size: 1rem;
-    color: var(--color-text-muted);
-    line-height: 1.6;
-  }
-
-  .hero-authors .affiliations {
-    font-size: 0.9rem;
-    color: var(--color-text-light);
-    margin-top: 0.3rem;
-  }
-
-  .hero-authors sup {
-    font-size: 0.7em;
-    color: var(--color-accent);
-  }
-
-  @media (max-width: 768px) {
-    .hero-section {
-      padding: 3rem 1rem 2rem;
-    }
-
-    .hero-title {
-      font-size: 2.2rem;
-    }
-
-    .hero-subtitle {
-      font-size: 1.1rem;
-    }
-  }
-</style>
-</div>
-</section>
 
 <style>
-  .hero-section {
-    padding: 5rem 1.5rem 3rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
 
-  .hero-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(192, 94, 60, 0.06) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 0;
-  }
+.hero-section {
+  padding: 5rem 1.5rem 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
 
-  .hero-inner {
-    position: relative;
-    z-index: 1;
-    max-width: 800px;
-    margin: 0 auto;
-  }
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(192,94,60,0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
 
-  .hero-badge {
-    display: inline-block;
-    font-family: var(--font-body);
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--color-accent);
-    background: rgba(192, 94, 60, 0.08);
-    border: 1px solid rgba(192, 94, 60, 0.2);
-    padding: 0.4rem 1.2rem;
-    border-radius: 100px;
-    margin-bottom: 2rem;
-  }
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+}
 
-  .hero-title {
-    font-family: var(--font-heading);
-    font-size: 3.2rem;
-    font-weight: 400;
-    color: var(--color-primary);
-    line-height: 1.15;
-    margin-bottom: 0.8rem;
-    letter-spacing: -0.02em;
-  }
 
-  .title-main {
-    display: block;
-  }
-
-  .hero-subtitle {
-    font-family: var(--font-body);
-    font-size: 1.35rem;
-    font-weight: 300;
-    color: var(--color-text-muted);
-    line-height: 1.5;
-    max-width: 600px;
-    margin: 0 auto;
-    letter-spacing: 0.01em;
-  }
-
-  .hero-authors {
-    margin-top: 2.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--color-border-light);
-  }
-
-  .hero-authors p {
-    font-size: 1rem;
-    color: var(--color-text-muted);
-    line-height: 1.6;
-  }
-
-  .hero-authors .affiliations {
-    font-size: 0.9rem;
-    color: var(--color-text-light);
-    margin-top: 0.3rem;
-  }
-
-  .hero-authors sup {
-    font-size: 0.7em;
-    color: var(--color-accent);
-  }
-
-  @media (max-width: 768px) {
-    .hero-section {
-      padding: 3rem 1rem 2rem;
-    }
-
-    .hero-title {
-      font-size: 2.2rem;
-    }
-
-    .hero-subtitle {
-      font-size: 1.1rem;
-    }
-  }
-
+/* ---------------- */
+/* Paper Banner */
+/* ---------------- */
 
 .paper-box{
   display:flex;
   align-items:center;
-  justify-content:center;
-  gap:.8rem;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:1rem;
 
   width:100%;
   max-width:1000px;
@@ -266,8 +84,6 @@
   background:#f4f4f4;
   border-radius:20px;
   border:1px solid rgba(0,0,0,0.08);
-
-  font-size:1rem;
 }
 
 .paper-left{
@@ -279,84 +95,79 @@
 }
 
 .paper-icon{
-  font-size:1.2rem;
+  font-size:1.3rem;
 }
 
 .paper-links{
   display:flex;
-  align-items:center;
-  gap:.7rem;
+  gap:.6rem;
 }
 
-.paper-links a{
+/* Buttons */
+
+.paper-btn{
+  background:#223253;
+  color:white;
+  padding:.45rem .95rem;
+  border-radius:20px;
   text-decoration:none;
-  color:#243453;
+  font-size:.9rem;
   font-weight:500;
+  transition:all .2s ease;
 }
 
-.paper-links a:hover{
-  text-decoration:underline;
-}
-
-.divider{
-  color:#999;
-}
-
-.paper-content{
-  flex:1;
-}
-
-.paper-content h3{
-  font-size:1.4rem;
-  margin-bottom:.25rem;
-  color:var(--color-primary);
-}
-
-.paper-content p{
-  font-size:.95rem;
-  margin-bottom:.6rem;
-  color:var(--color-text-muted);
-}
-
-.paper-buttons{
-  display:flex;
-  gap:.8rem;
+.paper-btn:hover{
+  background:#1a2740;
 }
 
 
-.btn-primary {
-  background: #223253;
-  color: white;
-  padding: .8rem 1.6rem;
-  border-radius: 40px;
-  text-decoration: none;
-  font-weight: 500;
+/* ---------------- */
+/* Title */
+/* ---------------- */
+
+.hero-title {
+  font-family: var(--font-heading);
+  font-size: 3.2rem;
+  font-weight: 400;
+  color: var(--color-primary);
+  line-height: 1.15;
+  margin-bottom: 0.8rem;
+  letter-spacing: -0.02em;
 }
 
-.btn-secondary {
-  background: #223253;
-  color: white;
-  padding: .8rem 1.6rem;
-  border-radius: 40px;
-  text-decoration: none;
-  font-weight: 500;
-}
-.btn-3rd {
-  background: #223253;
-  color: white;
-  padding: .8rem 1.6rem;
-  border-radius: 40px;
-  text-decoration: none;
-  font-weight: 500;
+.hero-subtitle {
+  font-family: var(--font-body);
+  font-size: 1.35rem;
+  font-weight: 300;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-.btn-secondary:hover {
-  background: rgba(0,0,0,0.04);
+
+/* ---------------- */
+/* Mobile */
+/* ---------------- */
+
+@media (max-width:768px){
+
+  .hero-section{
+    padding:3rem 1rem 2rem;
+  }
+
+  .hero-title{
+    font-size:2.2rem;
+  }
+
+  .hero-subtitle{
+    font-size:1.1rem;
+  }
+
+  .paper-box{
+    flex-direction:column;
+  }
+
 }
-.btn-3rd:hover {
-  background: rgba(0,0,0,0.04);
-}
-.btn-primary:hover {
-  background: rgba(0,0,0,0.04);
-}
+
 </style>
