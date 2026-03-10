@@ -255,24 +255,63 @@ Robots</span>
     }
   }
 
-  .hero-badges {
+ .paper-box {
   display: flex;
+  align-items: center;
+  gap: 1.8rem;
+  background: #f4f4f4;
+  border-radius: 22px;
+  padding: 2.2rem 2.5rem;
+  margin-bottom: 2.5rem;
+  border: 1px solid rgba(0,0,0,0.08);
+}
+
+.paper-icon {
+  width: 64px;
+  height: 64px;
+  background: #f1eae6;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 0.6rem;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
+  font-size: 1.6rem;
 }
 
-.hero-badge-secondary {
-  background: rgba(0,0,0,0.04);
-  border: 1px solid rgba(0,0,0,0.15);
+.paper-content h3 {
+  font-size: 1.8rem;
+  margin-bottom: .5rem;
   color: var(--color-primary);
-  text-decoration: none;
-  transition: all 0.2s ease;
 }
 
-.hero-badge-secondary:hover {
-  background: rgba(0,0,0,0.08);
-  transform: translateY(-1px);
+.paper-content p {
+  color: var(--color-text-muted);
+  margin-bottom: 1.3rem;
+  max-width: 620px;
+}
+
+.paper-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-primary {
+  background: #223253;
+  color: white;
+  padding: .8rem 1.6rem;
+  border-radius: 40px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.btn-secondary {
+  border: 1px solid rgba(0,0,0,0.2);
+  padding: .8rem 1.6rem;
+  border-radius: 40px;
+  text-decoration: none;
+  color: var(--color-primary);
+}
+
+.btn-secondary:hover {
+  background: rgba(0,0,0,0.04);
 }
 </style>
