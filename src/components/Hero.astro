@@ -3,52 +3,40 @@
 ---
 <section id="hero" class="hero-section">
   <div class="hero-inner">
-    <!-- <div class="hero-badge">IROS 2026</div> -->
-    <div class="paper-box">
-  <div class="appendix-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-            <polyline points="14 2 14 8 20 8" />
-            <line x1="16" y1="13" x2="8" y2="13" />
-            <line x1="16" y1="17" x2="8" y2="17" />
-            <polyline points="10 9 9 9 8 9" />
-          </svg>
-        </div>
 
-  <div class="paper-content">
-    <h3>Paper & Appendix</h3>
-    <p>
-     Supplementary materials including detailed methods and additional experiments.
+    <!-- Paper banner -->
+    <div class="paper-box">
+
+      <div class="paper-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+      </div>
+
+      <div class="paper-content">
+        <h3>Paper & Appendix</h3>
+        <p>Supplementary materials including detailed methods and additional experiments.</p>
+
+        <div class="paper-buttons">
+          <a href="/appendix.pdf" class="btn-primary" target="_blank">Appendix</a>
+          <a href="https://github.com/yourrepo" class="btn-primary" target="_blank">Code</a>
+          <a href="/dataset.pdf" class="btn-primary" target="_blank">Dataset</a>
+        </div>
+      </div>
+
+    </div>
+
+    <h1 class="hero-title">
+      SenseGuard: Sensor-to-Decision Adaptation for Reliable Agentic AI Robots
+    </h1>
+
+    <p class="hero-subtitle">
+      Adaptive and Efficient Storage under Vibration
     </p>
 
-    <div class="paper-buttons">
-      <a href="/appendix.pdf" class="btn-primary" target="_blank">
-        Appendix
-      </a>
-
-      <a href="https://github.com/yourrepo" class="btn-3rd" target="_blank">
-        Code (GitHub)
-      </a>
-      <a href="/datset.pdf" class="btn-primary" target="_blank">
-        Dataset
-      </a>
-    </div>
   </div>
-</div>
-    <h1 class="hero-title">
-      <span class="title-main">SenseGuard: Sensor-to-Decision Adaptation for Reliable Agentic AI
-Robots</span>
-    </h1>
-    <p class="hero-subtitle">Adaptive and Efficient Storage under Vibration</p>
-
-    <!-- TODO: Uncomment and fill in author info after acceptance -->
-    <!--
-    <div class="hero-authors">
-      <p>Author 1<sup>1</sup>, Author 2<sup>2</sup>, Author 3<sup>1</sup></p>
-      <p class="affiliations"><sup>1</sup>University A &nbsp; <sup>2</sup>University B</p>
-    </div>
-    -->
-  </div>
+</section>
 
 <style>
   .hero-section {
@@ -264,51 +252,54 @@ Robots</span>
   }
 
 
+.paper-box{
+  display:flex;
+  align-items:center;
+  gap:1.4rem;
 
-.paper-box {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;          /* space between icon and content */
-  width: 100%;
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 1.4rem 2rem;
-  background: #f4f4f4;
-  border-radius: 22px;
-   border: 1px solid rgba(0,0,0,0.08);
+  width:100%;
+  max-width:1000px;
+  margin:0 auto 2rem auto;
+
+  padding:1.3rem 1.8rem;
+
+  background:#f4f4f4;
+  border-radius:22px;
+  border:1px solid rgba(0,0,0,0.08);
 }
 
-.paper-icon {
-  width: 64px;
-  height: 64px;
-  background: #f1eae6;
-  border-radius: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.6rem;
+.paper-icon{
+  width:56px;
+  height:56px;
+  background:#f1eae6;
+  border-radius:16px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
-
-
-.paper-content h3 {
-  font-size: 1.5rem;
-  margin-bottom: 0.3rem;
-  color: var(--color-primary);
+.paper-content{
+  flex:1;
 }
 
-.paper-content p {
-  flex: 1
-  font-size: 0.95rem;
-  margin-bottom: 0.6rem;
-  max-width: 700px;  /* wider text so fewer lines */
+.paper-content h3{
+  font-size:1.4rem;
+  margin-bottom:.25rem;
+  color:var(--color-primary);
 }
 
-
-.paper-buttons {
-  display: flex;
-  gap: 1rem;
+.paper-content p{
+  font-size:.95rem;
+  margin-bottom:.6rem;
+  color:var(--color-text-muted);
 }
+
+.paper-buttons{
+  display:flex;
+  gap:.8rem;
+}
+
 
 .btn-primary {
   background: #223253;
