@@ -3,7 +3,7 @@
 ---
 <section id="hero" class="hero-section">
   <div class="hero-inner">
-    <div class="hero-badge">IROS 2026</div>
+    //<div class="hero-badge">IROS 2026</div>
     <div class="paper-box">
   <div class="appendix-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -268,15 +268,14 @@ Robots</span>
 .paper-box {
   display: flex;
   align-items: center;
-  justify-content: space-between;   /* spreads content horizontally */
-  gap: 1.4rem;
-  width: 100%;                      /* full width */
-  max-width: 1100px;                /* increase width */
+  gap: 1.5rem;          /* space between icon and content */
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.4rem 2rem;
   background: #f4f4f4;
-  border-radius: 18px;
-  padding: 1.2rem 2rem;             /* ↓ reduce height */
-  margin: 1.5rem auto;
-  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 22px;
+   border: 1px solid rgba(0,0,0,0.08);
 }
 
 .paper-icon {
@@ -299,10 +298,12 @@ Robots</span>
 }
 
 .paper-content p {
+  flex: 1
   font-size: 0.95rem;
   margin-bottom: 0.6rem;
   max-width: 700px;  /* wider text so fewer lines */
 }
+
 
 .paper-buttons {
   display: flex;
