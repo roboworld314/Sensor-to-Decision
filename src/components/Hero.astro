@@ -5,27 +5,26 @@
   <div class="hero-inner">
 
     <!-- Paper banner -->
-    <div class="paper-box">
+   <div class="paper-box">
 
-      <div class="paper-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-          <polyline points="14 2 14 8 20 8"/>
-        </svg>
-      </div>
+  <div class="paper-left">
+    <span class="paper-icon">📄</span>
+    <span class="paper-title">Paper & Appendix</span>
+  </div>
 
-      <div class="paper-content">
-        <h3>Paper & Appendix</h3>
-        <p>Supplementary materials including detailed methods and additional experiments.</p>
+  <span class="divider">|</span>
 
-        <div class="paper-buttons">
-          <a href="/appendix.pdf" class="btn-primary" target="_blank">Appendix</a>
-          <a href="https://github.com/yourrepo" class="btn-primary" target="_blank">Code</a>
-          <a href="/dataset.pdf" class="btn-primary" target="_blank">Dataset</a>
-        </div>
-      </div>
+  <div class="paper-links">
+    <a href="/appendix.pdf">Appendix</a>
+    <span>|</span>
+    <a href="https://github.com/yourrepo">Code</a>
+    <span>|</span>
+    <a href="/dataset">Dataset</a>
+    <span>|</span>
+    <a href="/video">Video</a>
+  </div>
 
-    </div>
+</div>
 
     <h1 class="hero-title">
       SenseGuard: Sensor-to-Decision Adaptation for Reliable Agentic AI Robots
@@ -255,28 +254,52 @@
 .paper-box{
   display:flex;
   align-items:center;
-  gap:1.4rem;
+  justify-content:center;
+  gap:.8rem;
 
   width:100%;
   max-width:1000px;
   margin:0 auto 2rem auto;
 
-  padding:1.3rem 1.8rem;
+  padding:.9rem 1.5rem;
 
   background:#f4f4f4;
-  border-radius:22px;
+  border-radius:20px;
   border:1px solid rgba(0,0,0,0.08);
+
+  font-size:1rem;
+}
+
+.paper-left{
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  font-weight:600;
+  color:var(--color-primary);
 }
 
 .paper-icon{
-  width:56px;
-  height:56px;
-  background:#f1eae6;
-  border-radius:16px;
+  font-size:1.2rem;
+}
 
+.paper-links{
   display:flex;
   align-items:center;
-  justify-content:center;
+  gap:.7rem;
+}
+
+.paper-links a{
+  text-decoration:none;
+  color:#243453;
+  font-weight:500;
+}
+
+.paper-links a:hover{
+  text-decoration:underline;
+}
+
+.divider{
+  color:#999;
 }
 
 .paper-content{
