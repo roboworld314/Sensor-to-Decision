@@ -1,28 +1,37 @@
 ---
 // ProblemStatement.astro — Section 2: Problem statement paragraphs
 ---
-<section id="problem-statement" class="content-section">
+<section id="abstract" class="content-section">
   <div class="section-container">
-    <h2 class="section-heading reveal">Problem Statement</h2>
+    <h2 class="section-heading reveal">Abstract</h2>
 
     <div class="prose reveal">
       <!-- TODO: Replace with your actual problem statement paragraph 1 -->
       <p>
-        Connected and autonomous vehicles (CAVs) generate vast amounts of sensor and telemetry data 
-        that must be reliably stored as a "black box" for forensic analysis, regulatory compliance, 
-        and continuous learning. However, the harsh vibrational environment inside a moving vehicle 
-        presents significant challenges to conventional storage systems, leading to data corruption, 
-        mechanical failures, and reduced device lifespans.
+        Agentic AI robots increasingly couple high-rate multimodal sensing with learned perception and 
+        foundation-model reasoning, yet deployment failures often trace to a sensor-to-decision bottleneck, 
+        not weak models: an autonomy stack can report low per-frame latency and high accuracy on processed frames,
+         but these "good numbers" fail to pay off unless predictions are anchored to fresh evidence at decision time. 
+         In the wild, high-throughput but low-value streams (redundancy/sparsity, amplified by vibration) saturate onboard
+          pipelines and induce queueing, delaying informative frames and forcing the robot to act on stale inputs. 
+          SenseGuard closes this gap by making robustness a decision-time freshness objective. It unifies (i) an online,
+           vibration- and context-aware adaptive de-duplication/downsampling policy that prioritizes timely delivery of informative 
+           evidence under tight compute, and (ii) an offline, model-centric trigger that detects sustained degradation 
+           and commits compact before/during/after multimodal evidence capsules, concentrating retention on hard cases 
+           to accelerate continual improvement. Across open-source benchmarks and a physical robotic vehicle, 
+           SenseGuard raises camera mAP@50 by up to +20 points, cuts inference latency by 31%, and reduces 
+           LiDAR trajectory error by 75%, dominating dedicated adaptive baselines on both accuracy and efficiency, 
+           with gains scaling to 8–11% under the harshest deployment conditions where models struggle most
       </p>
 
       <!-- TODO: Replace with your actual problem statement paragraph 2 -->
-      <p>
+     <!-- <p>
         Existing solutions either sacrifice storage capacity for durability or fail to adapt to 
         varying vibration profiles encountered during real-world driving. There is a critical need 
         for a storage architecture that dynamically adjusts its write strategies and error-correction 
         mechanisms based on real-time vibration sensing, while maintaining high throughput and 
         storage efficiency.
-      </p>
+      </p> -->
     </div>
   </div>
 </section>
