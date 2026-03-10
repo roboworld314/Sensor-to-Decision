@@ -7,7 +7,7 @@ const paragraphs = [
 
 "Based on this design point, our work makes the following contributions.",
 
-"Decision-time data freshness through adaptive sensing (RQ₁).We design a vibration-aware and context-aware adaptive policy that dynamically performs de-duplication and downsampling under tight compute budgets. Instead of merely reducing per-frame runtime, the goal is to maximize the throughput of fresh and informative sensory evidence at decision time, thereby reducing stale perception. The method avoids placing an additional heavy vision-language model in the critical path and instead reuses low-rate semantic signals already produced in many agentic stacks, such as structured scene summaries or reasoning traces, to guide adaptive thresholds. Reinforcement learning allows the policy to be aggressive when the stream is redundant and cautious when risk or novelty increases.",
+"<strong>Failure-aligned data curation for continual improvement (RQ₂).</strong> We design a vibration-aware and context-aware adaptive policy that dynamically performs de-duplication and downsampling under tight compute budgets. Instead of merely reducing per-frame runtime, the goal is to maximize the throughput of fresh and informative sensory evidence at decision time, thereby reducing stale perception. The method avoids placing an additional heavy vision-language model in the critical path and instead reuses low-rate semantic signals already produced in many agentic stacks, such as structured scene summaries or reasoning traces, to guide adaptive thresholds. Reinforcement learning allows the policy to be aggressive when the stream is redundant and cautious when risk or novelty increases.",
 
 "Failure-aligned data curation for continual improvement (RQ₂). We introduce a model-centric triggering mechanism that monitors the performance of onboard perception models during routine operation. When sustained accuracy degradation is detected, the system records compact multimodal evidence capsules capturing sensor data before, during, and after the degradation window. This shifts robotic data collection from event-agnostic logging dominated by redundant benign scenes to targeted retention aligned with model weaknesses.",
 
@@ -22,7 +22,7 @@ const paragraphs = [
 
     <div class="prose reveal">
       {paragraphs.map((text) => (
-        <p>{text}</p>
+        <p set:html={text}></p>
       ))}
     </div>
   </div>
