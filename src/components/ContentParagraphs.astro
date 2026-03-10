@@ -1,18 +1,17 @@
 ---
-// ContentParagraphs.astro — Section 4: Additional content paragraphs
+// ContentParagraphs.astro — Section: Contributions
 
-// TODO: Replace these paragraphs with your actual content
 const paragraphs = [
-We develop and evaluate our approach on Connected and Autonomous Vehicles (CAVs)—a demanding instance of agentic mobile robots. CAVs operate with extremely high multi-sensor bandwidth, strict real-time constraints, and safety-critical decision making during motion. If a system can filter low-value inputs while maintaining real-time responsiveness under these conditions, the same principles can generalize to other robotic platforms. Based on this design point, our work makes the following contributions:
 
-1. Decision-time data freshness through adaptive sensing (RQ₁).
-We design a vibration-aware and context-aware adaptive policy that dynamically performs de-duplication and downsampling under tight compute budgets. Instead of merely reducing per-frame runtime, the goal is to maximize the throughput of fresh and informative sensory evidence at decision time, thereby reducing stale perception. Importantly, the method does not rely on an additional heavy vision-language model in the critical path. Instead, it reuses low-rate semantic signals already produced in many agentic stacks (such as structured scene summaries or reasoning traces) to adjust sampling thresholds and action priors. Reinforcement learning enables the policy to behave aggressively when sensor streams are redundant and conservatively when risk or novelty increases—precisely where static threshold strategies typically fail.
+"We develop and evaluate our approach on Connected and Autonomous Vehicles (CAVs)—a demanding instance of agentic mobile robots. CAVs operate with extremely high multi-sensor bandwidth, strict real-time constraints, and safety-critical decision making during motion. If a system can filter low-value inputs while maintaining real-time responsiveness under these conditions, the same principles can generalize to other robotic platforms.",
 
-2. Failure-aligned data curation for continual improvement (RQ₂).
-We introduce a model-centric triggering mechanism that monitors the performance of onboard perception models during routine operation. When sustained accuracy degradation is detected, the system records compact multimodal evidence capsules capturing sensor data before, during, and after the degradation window. This reframes robotic data collection from traditional event-agnostic logging—which is often dominated by redundant benign scenes—to targeted retention aligned with model weaknesses. By prioritizing episodes where the model struggles, the curated dataset preserves temporal context, concentrates learning on challenging cases, and enables more efficient retraining that improves performance where it matters most.
+"Based on this design point, our work makes the following contributions.",
 
-3. Comprehensive evaluation in real and benchmark environments.
-We evaluate the proposed framework on both open-source benchmarks and a physical robotic vehicle across diverse indoor and outdoor conditions with noise and vibration. The evaluation includes stage-wise ablations of temporal and spatial redundancy removal for camera and LiDAR modalities, perception performance under degradation, adaptive training across eight scenario types, and end-to-end comparisons with representative baselines. Results demonstrate that SenseGuard consistently achieves the best freshness–accuracy–efficiency trade-off, improving camera accuracy by up to +20%, reducing LiDAR trajectory and rotational error by 75%, lowering inference latency by 31–78%, and reducing storage usage by 32%. Notably, performance gains scale with environmental degradation, confirming that jointly optimizing data freshness (RQ₁) and failure-aligned retention (RQ₂) outperforms methods addressing either dimension independently.
+"Decision-time data freshness through adaptive sensing (RQ₁). We design a vibration-aware and context-aware adaptive policy that dynamically performs de-duplication and downsampling under tight compute budgets. Instead of merely reducing per-frame runtime, the goal is to maximize the throughput of fresh and informative sensory evidence at decision time, thereby reducing stale perception. The method avoids placing an additional heavy vision-language model in the critical path and instead reuses low-rate semantic signals already produced in many agentic stacks, such as structured scene summaries or reasoning traces, to guide adaptive thresholds. Reinforcement learning allows the policy to be aggressive when the stream is redundant and cautious when risk or novelty increases.",
+
+"Failure-aligned data curation for continual improvement (RQ₂). We introduce a model-centric triggering mechanism that monitors the performance of onboard perception models during routine operation. When sustained accuracy degradation is detected, the system records compact multimodal evidence capsules capturing sensor data before, during, and after the degradation window. This shifts robotic data collection from event-agnostic logging dominated by redundant benign scenes to targeted retention aligned with model weaknesses.",
+
+"Comprehensive evaluation in real and benchmark environments. We evaluate the framework on open-source benchmarks and a physical robotic vehicle across diverse indoor and outdoor conditions with noise and vibration. The evaluation includes stage-wise ablations of temporal and spatial redundancy removal, perception performance under degradation, adaptive training across eight scenario types, and end-to-end comparisons with representative baselines. SenseGuard achieves the strongest freshness–accuracy–efficiency trade-off, improving camera accuracy by up to +20%, reducing LiDAR trajectory error by 75%, lowering inference latency by 31–78%, and reducing storage usage by 32%."
 
 ];
 ---
@@ -30,34 +29,39 @@ We evaluate the proposed framework on both open-source benchmarks and a physical
 </section>
 
 <style>
-  .section-heading {
-    font-family: var(--font-heading);
-    font-size: 1.6rem;
-    color: var(--color-primary);
-    margin-bottom: 1.5rem;
-    position: relative;
-    padding-bottom: 0.75rem;
-  }
+.section-heading {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  color: var(--color-primary);
+  margin-bottom: 1.5rem;
+  position: relative;
+  padding-bottom: 0.75rem;
+}
 
-  .section-heading::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 48px;
-    height: 3px;
-    background: var(--color-accent);
-    border-radius: 2px;
-  }
+.section-heading::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 48px;
+  height: 3px;
+  background: var(--color-accent);
+  border-radius: 2px;
+}
 
-  .prose p {
-    font-size: 1.05rem;
-    line-height: 1.8;
-    color: var(--color-text);
-    margin-bottom: 1.25rem;
-  }
+.prose {
+  max-width: 900px;
+}
 
-  .prose p:last-child {
-    margin-bottom: 0;
-  }
+.prose p {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--color-text);
+  margin-bottom: 1.25rem;
+  text-align: justify;
+}
+
+.prose p:last-child {
+  margin-bottom: 0;
+}
 </style>
