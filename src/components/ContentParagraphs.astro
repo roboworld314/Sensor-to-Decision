@@ -3,14 +3,23 @@
 
 // TODO: Replace these paragraphs with your actual content
 const paragraphs = [
-  "Our proposed CAV Black Box system introduces a vibration-aware storage controller that continuously monitors accelerometer data from the vehicle chassis. By classifying vibration patterns in real-time using a lightweight neural network, the controller dynamically selects optimal write block sizes, adjusts ECC (Error Correction Code) redundancy levels, and manages wear leveling strategies. This approach reduces write amplification by up to 37% compared to static configurations while maintaining data integrity guarantees.",
-  "Extensive evaluation across both simulated vibration profiles and real-world road tests demonstrates that our system achieves 99.97% data integrity under extreme conditions (vibration amplitudes up to 8g), while simultaneously extending the effective lifespan of the storage medium by 2.3x. The adaptive mechanism adds less than 0.8% computational overhead, making it practical for deployment in resource-constrained automotive embedded systems.",
+We develop and evaluate our approach on Connected and Autonomous Vehicles (CAVs)—a demanding instance of agentic mobile robots. CAVs operate with extremely high multi-sensor bandwidth, strict real-time constraints, and safety-critical decision making during motion. If a system can filter low-value inputs while maintaining real-time responsiveness under these conditions, the same principles can generalize to other robotic platforms. Based on this design point, our work makes the following contributions:
+
+1. Decision-time data freshness through adaptive sensing (RQ₁).
+We design a vibration-aware and context-aware adaptive policy that dynamically performs de-duplication and downsampling under tight compute budgets. Instead of merely reducing per-frame runtime, the goal is to maximize the throughput of fresh and informative sensory evidence at decision time, thereby reducing stale perception. Importantly, the method does not rely on an additional heavy vision-language model in the critical path. Instead, it reuses low-rate semantic signals already produced in many agentic stacks (such as structured scene summaries or reasoning traces) to adjust sampling thresholds and action priors. Reinforcement learning enables the policy to behave aggressively when sensor streams are redundant and conservatively when risk or novelty increases—precisely where static threshold strategies typically fail.
+
+2. Failure-aligned data curation for continual improvement (RQ₂).
+We introduce a model-centric triggering mechanism that monitors the performance of onboard perception models during routine operation. When sustained accuracy degradation is detected, the system records compact multimodal evidence capsules capturing sensor data before, during, and after the degradation window. This reframes robotic data collection from traditional event-agnostic logging—which is often dominated by redundant benign scenes—to targeted retention aligned with model weaknesses. By prioritizing episodes where the model struggles, the curated dataset preserves temporal context, concentrates learning on challenging cases, and enables more efficient retraining that improves performance where it matters most.
+
+3. Comprehensive evaluation in real and benchmark environments.
+We evaluate the proposed framework on both open-source benchmarks and a physical robotic vehicle across diverse indoor and outdoor conditions with noise and vibration. The evaluation includes stage-wise ablations of temporal and spatial redundancy removal for camera and LiDAR modalities, perception performance under degradation, adaptive training across eight scenario types, and end-to-end comparisons with representative baselines. Results demonstrate that SenseGuard consistently achieves the best freshness–accuracy–efficiency trade-off, improving camera accuracy by up to +20%, reducing LiDAR trajectory and rotational error by 75%, lowering inference latency by 31–78%, and reducing storage usage by 32%. Notably, performance gains scale with environmental degradation, confirming that jointly optimizing data freshness (RQ₁) and failure-aligned retention (RQ₂) outperforms methods addressing either dimension independently.
+
 ];
 ---
 
 <section id="content-paragraphs" class="content-section">
   <div class="section-container">
-    <h2 class="section-heading reveal">Approach &amp; Key Findings</h2>
+    <h2 class="section-heading reveal">Contributions</h2>
 
     <div class="prose reveal">
       {paragraphs.map((text) => (
