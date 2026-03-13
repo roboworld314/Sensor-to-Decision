@@ -1,0 +1,106 @@
+---
+// DemoVideo.astro — Section 5: Fixed Media Gallery
+---
+<section id="demo-video" class="content-section">
+  <div class="section-container">
+    <h2 class="section-heading reveal">Real Run and Vibration Stratification</h2>
+
+    <div class="media-grid reveal">
+      
+      <div class="media-item card video-item">
+        <div class="video-container">
+          <iframe
+            src="https://drive.google.com/file/d/1XJ6RTKSLHpggS11d33h5RUC6NltZzXkD/preview"
+            allow="autoplay"
+            allowfullscreen
+            frameborder="0"
+          ></iframe>
+        </div>
+      </div>
+
+      <div class="media-item card">
+        <img src="https://lh3.googleusercontent.com/d/1_TBdIG1UbyEB6tQ_wzuksS9Ima-5Tifo" alt="Vibration Analysis 1" />
+      </div>
+
+      <div class="media-item card">
+  <img 
+    src="https://lh3.googleusercontent.com/d/1cXq-6QRp2JGmHE5qpxVie5pS9SyeaFlD=w1000"
+    alt="Vibration Analysis"
+  />
+</div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .section-heading {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    color: var(--color-primary);
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 0.75rem;
+  }
+
+  .section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 48px;
+    height: 3px;
+    background: var(--color-accent);
+    border-radius: 2px;
+  }
+
+  .media-grid {
+    display: flex;
+    gap: 1rem;
+    align-items: stretch;
+    width: 100%;
+  }
+
+.media-item {
+  flex: 1;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #111;
+  display: flex;
+  min-height: 180px;
+}
+
+.media-item img,
+.video-container iframe {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+  .video-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  .video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  @media (max-width: 768px) {
+    .media-grid {
+      flex-direction: column;
+    }
+    .media-item {
+      min-height: 200px;
+    }
+    .video-container {
+       padding-top: 56.25%; /* Maintains 16:9 on mobile */
+    }
+  }
+</style>
