@@ -3,15 +3,15 @@
 
 const paragraphs = [
 
-  "We develop and evaluate our approach on Connected and Autonomous Vehicles (CAVs), a demanding robotic setting with high multi-sensor bandwidth, strict real-time constraints, and safety-critical decisions in motion. A system that filters low-value inputs while maintaining real-time responsiveness under these conditions generalizes naturally to other robotic platforms.",
+  "We target Connected and Autonomous Vehicles (CAVs)—a high-pressure setting with massive sensor data, strict real-time constraints, and safety-critical decisions. Methods that succeed here naturally extend to other robotic systems.",
 
-  "Based on this design point, our work makes the following contributions.",
+  "Our work is built around three key contributions:",
 
-  "<strong>Adaptive sensory filtering (RQ₁).</strong> We design a vibration- and context-aware policy that dynamically performs de-duplication and downsampling under tight compute budgets. Rather than merely reducing per-frame runtime, the goal is to maximize the flow of fresh, informative evidence at decision time. The method reuses low-rate semantic signals already present in many agentic stacks, such as scene summaries or reasoning traces, to guide adaptive thresholds, avoiding any heavy model in the critical path. Reinforcement learning makes the policy aggressive when the stream is redundant and cautious when risk or novelty rises.",
+  "<strong>Adaptive sensory filtering.</strong> A vibration- and context-aware policy dynamically removes redundant data while preserving critical information. It leverages lightweight semantic cues and reinforcement learning to stay efficient and responsive in real time.",
 
-  "<strong>Failure-aligned data curation (RQ₂).</strong> We introduce a model-centric triggering mechanism that monitors onboard perception during routine operation. Upon detecting sustained accuracy degradation, the system records compact multimodal evidence capsules spanning the degradation window. This shifts data collection from event-agnostic logging of redundant benign scenes to targeted retention aligned with model weaknesses.",
+  "<strong>Failure-aligned data curation.</strong> Instead of logging everything, the system captures compact, high-value data when perception quality drops—focusing on what truly matters for improving models.",
 
-  "<strong>Comprehensive evaluation.</strong> We evaluate on open-source benchmarks and a physical vehicle across diverse indoor and outdoor conditions with noise and vibration, including stage-wise ablations and end-to-end comparisons with baselines. SenseGuard achieves the best freshness–accuracy–efficiency trade-off: up to +20% camera accuracy, 75% lower LiDAR trajectory error, 31–78% lower inference latency, and 32% storage reduction."
+  "<strong>Strong real-world performance.</strong> Across benchmarks and real vehicles, SenseGuard delivers up to +20% accuracy, 75% lower trajectory error, significantly reduced latency, and 32% less storage."
 
 ];
 ---
