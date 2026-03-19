@@ -1,33 +1,36 @@
 ---
-// DemoVideo.astro — Section 5: Demo video
+// DemoVideo.astro
 ---
 <section id="demo-video" class="content-section">
   <div class="section-container">
     <h2 class="section-heading reveal">Demo Video</h2>
 
-    <div class="video-block card reveal">
+    <div class="video-block reveal">
       <div class="video-container">
         <iframe
           src="https://drive.google.com/file/d/1wWTNAS4955ns9qfJYYPXwjy6jgHvF9V2/preview"
-          width="100%"
-          height="100%"
-          allow="autoplay"
-          allowfullscreen
-          frameborder="0"
+          allow="autoplay; fullscreen"
+          loading="lazy"
+          title="CAV Black Box Demo"
         ></iframe>
       </div>
+      <p class="video-caption">
+        Demonstration of adaptive storage efficiency under high-vibration environments.
+      </p>
     </div>
-
-    
   </div>
 </section>
 
 <style>
+  .content-section {
+    padding: 3rem 0;
+  }
+
   .section-heading {
     font-family: var(--font-heading);
-    font-size: 1.6rem;
+    font-size: 2rem;
     color: var(--color-primary);
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
     position: relative;
     padding-bottom: 0.75rem;
   }
@@ -37,22 +40,26 @@
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 48px;
-    height: 3px;
+    width: 60px;
+    height: 4px;
     background: var(--color-accent);
     border-radius: 2px;
   }
 
   .video-block {
+    background: #fff;
+    padding: 1rem;
     border-radius: var(--radius-md);
-    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
   }
 
   .video-container {
     width: 100%;
-    aspect-ratio: 16 / 9;
-    background: #0f0f14;
-    line-height: 0;
+    /* This maintains 16:9 ratio automatically on all screens */
+    aspect-ratio: 16 / 9; 
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
   }
 
   .video-container iframe {
@@ -62,11 +69,20 @@
   }
 
   .video-caption {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     color: var(--color-text-light);
     text-align: center;
-    margin-top: 1rem;
+    margin-top: 1.2rem;
     font-style: italic;
-    line-height: 1.6;
+  }
+
+  /* Tablet/Mobile Adjustments */
+  @media (max-width: 768px) {
+    .section-heading {
+      font-size: 1.5rem;
+    }
+    .video-block {
+      padding: 0.5rem;
+    }
   }
 </style>
