@@ -44,9 +44,27 @@ const { title = "CAV Black Box Demo" } = Astro.props;
 
       main {
         width: 100%;
-        max-width: 1100px; /* Standard readable width */
-        margin: 0 auto;
-        padding: 2rem 1.5rem; /* Touch-safe gutters for mobile */
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      @media (max-width: 480px) {
+        main {
+          padding: 0;
+        }
+      }
+
+      @media (min-width: 481px) and (max-width: 768px) {
+        main {
+          padding: 0;
+        }
+      }
+
+      @media (min-width: 769px) {
+        main {
+          padding: 0;
+        }
       }
 
       /* Animation Base State */

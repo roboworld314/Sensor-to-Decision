@@ -19,8 +19,11 @@
   --color-border: #d8d4ce;
   --color-border-light: #e8e5df;
   --color-divider: #c9c4bb;
-  --page-max-width: 960px;
-  --page-wide-width: 1100px;
+  --page-max-width: 1080px;
+  --page-wide-width: 1200px;
+  --content-padding-mobile: 1rem;
+  --content-padding-tablet: 1.5rem;
+  --content-padding-desktop: 2rem;
   --font-heading: 'DM Serif Display', 'Georgia', serif;
   --font-body: 'DM Sans', 'Helvetica Neue', sans-serif;
   --radius-sm: 6px;
@@ -80,28 +83,59 @@ a:hover {
 /* --- Section Layout --- */
 
 .content-section {
-  padding: 3rem 1.5rem;
+  width: 100%;
+  padding: var(--content-padding-mobile);
   scroll-margin-top: 2rem;
 }
 
 .section-container {
+  width: 100%;
   max-width: var(--page-max-width);
   margin: 0 auto;
+  padding: 0;
 }
 
 .section-wide {
+  width: 100%;
   max-width: var(--page-wide-width);
   margin: 0 auto;
+  padding: 0;
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .content-section {
+    padding: var(--content-padding-tablet);
+  }
+}
+
+@media (min-width: 769px) {
+  .content-section {
+    padding: var(--content-padding-desktop) var(--content-padding-tablet);
+  }
 }
 
 /* --- Dividers --- */
 
 .section-divider {
+  width: 100%;
   max-width: var(--page-max-width);
-  margin: 0 auto;
+  margin: var(--content-padding-desktop) auto;
   border: none;
   border-top: 1px solid var(--color-divider);
   opacity: 0.6;
+  padding: 0;
+}
+
+@media (max-width: 480px) {
+  .section-divider {
+    margin: var(--content-padding-mobile) auto;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .section-divider {
+    margin: var(--content-padding-tablet) auto;
+  }
 }
 
 /* --- Typography --- */
@@ -153,18 +187,24 @@ p {
 
 /* --- Responsive --- */
 
-@media (max-width: 768px) {
-  :root {
-    --page-max-width: 100%;
-  }
+@media (max-width: 480px) {
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.2rem; }
+  h3 { font-size: 1rem; }
+  
+  p { font-size: 0.95rem; line-height: 1.6; }
+}
 
+@media (min-width: 481px) and (max-width: 768px) {
   h1 { font-size: 1.8rem; }
   h2 { font-size: 1.4rem; }
   h3 { font-size: 1.15rem; }
+}
 
-  .content-section {
-    padding: 2rem 1rem;
-  }
+@media (min-width: 769px) {
+  h1 { font-size: 2.4rem; }
+  h2 { font-size: 1.7rem; }
+  h3 { font-size: 1.35rem; }
 }
 
 /* --- Utility --- */
