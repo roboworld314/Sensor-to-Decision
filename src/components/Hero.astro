@@ -69,7 +69,7 @@
 
 /* ===== LAYOUT ===== */
 .hero-section {
-  padding: 4rem 2rem;
+  padding: 2rem 1rem;
   background: linear-gradient(135deg, #f7f5f2, #ece9e3);
 }
 
@@ -107,9 +107,10 @@
 
 /* ===== VEHICLE ===== */
 .hero-right {
+  text-align: center;   /* ✅ center all text */
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  align-items: center;  /* centers buttons + box */
 }
 
 .vehicle-wrapper {
