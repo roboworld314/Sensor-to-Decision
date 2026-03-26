@@ -1,5 +1,4 @@
 ---
-// ContentParagraphs.astro — Enhanced Contributions (Format A Style)
 ---
 
 <section id="content-paragraphs" class="content-section">
@@ -7,40 +6,45 @@
 
     <h2 class="section-heading reveal">Key Contributions</h2>
 
-    <!-- Intro -->
+    <!-- FIX 1 + 2 -->
     <p class="intro-text reveal">
       We evaluate SenseGuard in Connected and Autonomous Vehicles (CAVs)—a demanding setting with massive sensor data, strict real-time constraints, and safety-critical decisions. Solutions that succeed here generalize naturally to broader robotic systems.
     </p>
 
-    <!-- Contribution Cards -->
+    <!-- Cards -->
     <div class="contribution-grid reveal">
 
       <!-- Card 1 -->
       <div class="contribution-card">
-        <div class="icon">⚡</div>
+        <div class="gif">
+          <img src="https://media.giphy.com/media/3o7TKtnuHOHHUjR38Y/giphy.gif" />
+        </div>
         <h3>Adaptive Sensory Filtering</h3>
         <p>
-          A vibration- and context-aware policy dynamically removes redundant data while preserving critical information. 
+          A vibration- and context-aware policy dynamically removes redundant data while preserving critical information.
           Leveraging lightweight semantics and reinforcement learning, it maintains real-time efficiency under tight compute budgets.
         </p>
       </div>
 
       <!-- Card 2 -->
       <div class="contribution-card">
-        <div class="icon">💾</div>
+        <div class="gif">
+          <img src="https://media.giphy.com/media/l0HlNaQ6gWfllcjDO/giphy.gif" />
+        </div>
         <h3>Failure-Aligned Data Curation</h3>
         <p>
-          Instead of logging everything, the system captures compact, high-value data when perception degrades—focusing 
-          on critical events that accelerate model improvement.
+          Instead of logging everything, the system captures compact, high-value data when perception degrades—focusing on critical events that accelerate model improvement.
         </p>
       </div>
 
       <!-- Card 3 -->
       <div class="contribution-card">
-        <div class="icon">📈</div>
+        <div class="gif">
+          <img src="https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy.gif" />
+        </div>
         <h3>Strong Real-World Performance</h3>
         <p>
-          Achieves up to <strong>+20% accuracy</strong>, <strong>75% lower trajectory error</strong>, reduced latency, 
+          Achieves up to <strong>+20% accuracy</strong>, <strong>75% lower trajectory error</strong>, reduced latency,
           and <strong>32% storage savings</strong> across benchmarks and real-world deployments.
         </p>
       </div>
@@ -52,55 +56,68 @@
 
 <style>
 
-/* ===== HEADING ===== */
-.section-heading {
-  font-size: 1.6rem;
-  margin-bottom: 1.5rem;
-  position: relative;
-}
-
-.section-heading::after {
-  width: 55px;
-  height: 3px;
-}
-
-/* ===== INTRO ===== */
+/* ===== INTRO FIX ===== */
 .intro-text {
+  width: 100%;                /* FIX 1 */
+  max-width: 100%;
   font-size: 1.05rem;
-  line-height: 1.75;
+  line-height: 1.8;
   color: #444;
-  max-width: 800px;
   margin-bottom: 2.2rem;
+
+  text-align: justify;        /* FIX 2 */
+  text-justify: inter-word;
 }
 
 /* ===== GRID ===== */
 .contribution-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.6rem;
 }
 
 /* ===== CARD ===== */
 .contribution-card {
-  padding: 1.4rem 1.4rem;
+  padding: 1.4rem;
   border-radius: 12px;
 
   background: #ffffff;
   border: 1px solid #e4e8ef;
 
-  transition: all 0.25s ease;
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
-/* Hover */
+/* ===== HOVER (FIX 3 + 5) ===== */
 .contribution-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 28px rgba(0,0,0,0.06);
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 14px 35px rgba(0,0,0,0.08);
+  border-color: #c05e3c;
 }
 
-/* ===== ICON ===== */
-.icon {
-  font-size: 1.3rem;
-  margin-bottom: 0.6rem;
+/* Glow effect */
+.contribution-card:hover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: radial-gradient(circle, rgba(192,94,60,0.08), transparent 70%);
+  pointer-events: none;
+}
+
+/* ===== GIF ===== */
+.gif img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  margin-bottom: 0.7rem;
+  opacity: 0.9;
+}
+
+/* Animate on hover */
+.contribution-card:hover .gif img {
+  transform: scale(1.15);
+  transition: transform 0.3s ease;
 }
 
 /* ===== TITLE ===== */
@@ -116,16 +133,14 @@
   font-size: 0.95rem;
   line-height: 1.6;
   color: #555;
+
+  text-align: justify;   /* FIX 2 */
 }
 
 /* ===== MOBILE ===== */
 @media (max-width: 768px) {
   .intro-text {
-    font-size: 0.95rem;
-  }
-
-  .contribution-card {
-    padding: 1.2rem;
+    text-align: left;
   }
 }
 
