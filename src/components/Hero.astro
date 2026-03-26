@@ -40,16 +40,20 @@
 
     <!-- RIGHT VISUAL (1/3) -->
     <div class="hero-right">
-      <div class="vehicle-wrapper">
-        <img 
-          src="https://cdn-icons-png.flaticon.com/512/744/744465.png" 
-          alt="Autonomous Vehicle"
-          class="vehicle"
-        />
-      </div>
-    </div>
+  <div class="vehicle-wrapper">
+
+    <!-- Road -->
+    <div class="road"></div>
+
+    <!-- Car -->
+    <img 
+      src="/Users/johoraakterpolin/Downloads/ICRA_demo_website/public/images/car.png"
+      alt="Autonomous Vehicle"
+      class="vehicle"
+    />
 
   </div>
+</div>
 </section>
 
 <style>
@@ -187,5 +191,87 @@
     width: 160px;
   }
 }
+/* ===== VEHICLE WRAPPER ===== */
+.vehicle-wrapper {
+  position: relative;
+  width: 260px;
+  height: 140px;
+  overflow: hidden;
 
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+/* ===== ROAD ===== */
+.road {
+  position: absolute;
+  bottom: 12px;
+  width: 100%;
+  height: 3px;
+
+  background: repeating-linear-gradient(
+    to right,
+    #bbb,
+    #bbb 20px,
+    transparent 20px,
+    transparent 40px
+  );
+
+  animation: roadMove 1.2s linear infinite;
+}
+
+/* ===== CAR ===== */
+.vehicle {
+  position: absolute;
+  bottom: 18px;
+  left: -140px;
+  width: 180px;
+
+  animation: 
+    drive 6s linear infinite,
+    floatCar 3s ease-in-out infinite;
+
+  transition: transform 0.3s ease;
+}
+
+/* Hover interaction */
+.vehicle:hover {
+  transform: scale(1.05);
+}
+
+/* ===== DRIVING MOTION ===== */
+@keyframes drive {
+  0% {
+    left: -140px;
+  }
+  100% {
+    left: 280px;
+  }
+}
+
+/* ===== FLOATING (REALISTIC TOUCH) ===== */
+@keyframes floatCar {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-4px); }
+  100% { transform: translateY(0px); }
+}
+
+/* ===== ROAD MOTION ===== */
+@keyframes roadMove {
+  from { background-position: 0; }
+  to { background-position: 40px; }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .vehicle-wrapper {
+    width: 200px;
+    height: 110px;
+  }
+
+  .vehicle {
+    width: 140px;
+  }
+}
 </style>
