@@ -5,27 +5,28 @@
 <section id="problem-statement" class="content-section">
   <div class="section-container">
 
-    <!-- Section Title -->
-    <h2 class="section-heading reveal">
+    <!-- Title -->
+    <h2 class="section-heading">
       Sensor-to-Decision Bottleneck in Agentic Autonomy
     </h2>
 
-    <!-- Intro Paragraph -->
-    <div class="prose reveal">
+    <!-- 🔥 NEW: Highlighted Intro Box -->
+    <div class="intro-box">
       <p>
-        Agentic AI robots increasingly couple high-rate multimodal sensing with learned perception and foundation-model reasoning, yet deployment failures often arise from a <strong>sensor-to-decision bottleneck</strong>, not weak models. Systems may report strong per-frame accuracy and low latency, but these metrics fail unless predictions are grounded in <strong>fresh, decision-time evidence</strong>.
+        Agentic AI robots increasingly couple high-rate multimodal sensing with learned perception and foundation-model reasoning, yet deployment failures arise from a <strong>sensor-to-decision bottleneck</strong>, not weak models.
+        Even with high per-frame accuracy, decisions fail when not grounded in <strong>fresh, decision-time evidence</strong>.
       </p>
     </div>
 
-    <!-- Highlight Box (Converted from your abstract) -->
-    <div class="problem-highlights reveal">
-      <p>Key system-level limitations:</p>
+    <!-- 🔥 Key Problems -->
+    <div class="problem-highlights">
+      <p class="highlight-title">Key System-Level Limitations</p>
 
       <div class="highlight-box">
 
         <!-- Item 1 -->
         <div class="highlight-item">
-          <span class="highlight-number">⚠️</span>
+          <div class="highlight-icon">1</div>
           <div class="highlight-content">
             <h4>Stale Decision Inputs</h4>
             <p>Queueing delays force decisions on outdated sensor evidence despite high model accuracy.</p>
@@ -34,7 +35,7 @@
 
         <!-- Item 2 -->
         <div class="highlight-item">
-          <span class="highlight-number">💾</span>
+          <div class="highlight-icon">2</div>
           <div class="highlight-content">
             <h4>Low-Value Data Overload</h4>
             <p>Redundant and vibration-amplified streams saturate onboard pipelines and waste compute.</p>
@@ -43,7 +44,7 @@
 
         <!-- Item 3 -->
         <div class="highlight-item">
-          <span class="highlight-number">⚡</span>
+          <div class="highlight-icon">3</div>
           <div class="highlight-content">
             <h4>Delayed Informative Evidence</h4>
             <p>High-value frames arrive too late, degrading real-time decision reliability.</p>
@@ -53,10 +54,11 @@
       </div>
     </div>
 
-    <!-- Contribution / Bridge -->
-    <div class="prose reveal">
+    <!-- 🔥 Bridge -->
+    <div class="bridge-text">
       <p>
-        <strong>SenseGuard</strong> addresses this gap by treating robustness as a <strong>decision-time freshness objective</strong>. It combines an online adaptive filtering policy with an offline, model-centric data curation strategy to ensure timely perception and efficient continual improvement.
+        <strong>SenseGuard</strong> addresses this gap by treating robustness as a 
+        <strong>decision-time freshness objective</strong>, combining adaptive filtering with model-centric data curation.
       </p>
     </div>
 
@@ -99,63 +101,86 @@
 
 <style>
 
-/* ===== Layout ===== */
-.content-section {
-  padding: 4rem 2rem 3rem;
+/* ===== INTRO BOX ===== */
+.intro-box {
+  padding: 1.5rem 1.6rem;
+  border-radius: 12px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(192,94,60,0.06),
+    rgba(34,50,83,0.03)
+  );
+
+  border: 1px solid rgba(192,94,60,0.1);
+  margin-bottom: 2rem;
+
+  transition: all 0.25s ease;
 }
 
-.section-container {
-  max-width: 1100px;
-  margin: auto;
+.intro-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.05);
 }
 
-/* ===== Heading ===== */
-.section-heading {
-  font-size: 1.6rem;
-  color: #223253;
-  margin-bottom: 1.5rem;
-  position: relative;
-  padding-bottom: 0.6rem;
-}
-
-.section-heading::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 45px;
-  height: 3px;
-  background: #c05e3c;
-}
-
-/* ===== Text ===== */
-.prose p {
+.intro-box p {
+  margin: 0;
   font-size: 1.05rem;
-  line-height: 1.8;
-  color: #333;
+  line-height: 1.85;
+  text-align: justify;
 }
 
-/* ===== Highlights ===== */
-.highlight-box {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.2rem;
-  margin: 1.5rem 0;
+.intro-box strong {
+  color: #c05e3c;
 }
 
+/* ===== TITLE FOR HIGHLIGHTS ===== */
+.highlight-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 1rem;
+  letter-spacing: 0.4px;
+}
+
+/* ===== HIGHLIGHT CARD ===== */
 .highlight-item {
   display: flex;
-  gap: 0.8rem;
-  padding: 1rem;
-  border-left: 4px solid #c05e3c;
-  background: rgba(0,0,0,0.02);
-  border-radius: 10px;
+  gap: 0.9rem;
+  padding: 1.1rem;
+
+  border-radius: 12px;
+  border: 1px solid #e4e8ef;
+
+  background: linear-gradient(#fff, #fafbfc);
+
+  transition: all 0.25s ease;
 }
 
-.highlight-number {
-  font-size: 1.2rem;
+.highlight-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  border-color: #c05e3c;
 }
 
+/* ===== NUMBER ICON ===== */
+.highlight-icon {
+  width: 30px;
+  height: 30px;
+
+  border-radius: 50%;
+  background: #223253;
+  color: white;
+
+  font-size: 0.8rem;
+  font-weight: 600;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== CONTENT ===== */
 .highlight-content h4 {
   margin: 0 0 0.3rem;
   font-size: 1rem;
@@ -165,6 +190,22 @@
 .highlight-content p {
   margin: 0;
   font-size: 0.9rem;
+  color: #555;
+}
+
+/* ===== BRIDGE ===== */
+.bridge-text {
+  margin-top: 2rem;
+}
+
+.bridge-text p {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  text-align: justify;
+}
+
+.bridge-text strong {
+  color: #c05e3c;
 }
 
 /* ===== SECTION ===== */
