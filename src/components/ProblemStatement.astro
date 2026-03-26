@@ -168,38 +168,87 @@
   font-size: 0.9rem;
 }
 
-/* ===== Research Questions ===== */
+/* ===== SECTION ===== */
+#research-questions {
+  padding-top: 3rem;
+}
+
+/* Heading */
+.section-heading {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.section-heading::after {
+  width: 60px;   /* longer underline */
+  height: 3px;
+}
+
+/* ===== GRID FIX ===== */
 .research-questions-box {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(2, minmax(320px, 520px)); /* FIXED WIDTH */
+  justify-content: center; /* center the cards */
   gap: 1.5rem;
-  margin-top: 2rem;
 }
 
+/* ===== CARD ===== */
 .question-item {
   display: flex;
-  gap: 1rem;
-  padding: 1.4rem;
-  border-radius: 12px;
-  border: 1px solid #e0e5ec;
-  background: rgba(0,0,0,0.02);
+  gap: 0.9rem;
+  padding: 1.2rem 1.3rem;
+
+  border-radius: 10px;
+  border: 1px solid #e2e6ed;
+
+  background: #fafbfc;
+
+  transition: all 0.25s ease;
 }
 
+/* Subtle hover */
+.question-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+/* ===== BADGE FIX ===== */
 .question-badge {
-  width: 42px;
-  height: 42px;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+
+  font-size: 0.9rem;
+  font-weight: 600;
+
   background: #223253;
-  color: white;
   border-radius: 50%;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
 }
 
+/* ===== TEXT FIX ===== */
 .question-content p {
   margin: 0;
   font-size: 0.95rem;
+  line-height: 1.55;  /* tighter */
+  color: #333;
 }
 
+/* Title inside */
+.question-content strong {
+  font-weight: 600;
+  color: #223253;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .research-questions-box {
+    grid-template-columns: 1fr;
+  }
+}
 </style>
