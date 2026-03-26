@@ -19,40 +19,45 @@
     </div>
 
     <!-- 🔥 Key Problems -->
-    <div class="problem-highlights">
-      <p class="highlight-title">Key System-Level Limitations</p>
+    <!-- Item 1 -->
+<div class="highlight-item">
+  <div class="highlight-icon">
+    <svg viewBox="0 0 24 24">
+      <path d="M3 12h18M3 6h18M3 18h18"/>
+    </svg>
+  </div>
+  <div class="highlight-content">
+    <h4>Stale Decision Inputs</h4>
+    <p>Queueing delays force decisions on outdated sensor evidence despite high model accuracy.</p>
+  </div>
+</div>
 
-      <div class="highlight-box">
+<!-- Item 2 -->
+<div class="highlight-item">
+  <div class="highlight-icon">
+    <svg viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M12 7v5l3 3"/>
+    </svg>
+  </div>
+  <div class="highlight-content">
+    <h4>Low-Value Data Overload</h4>
+    <p>Redundant and vibration-amplified streams saturate onboard pipelines and waste compute.</p>
+  </div>
+</div>
 
-        <!-- Item 1 -->
-        <div class="highlight-item">
-          <div class="highlight-icon">1</div>
-          <div class="highlight-content">
-            <h4>Stale Decision Inputs</h4>
-            <p>Queueing delays force decisions on outdated sensor evidence despite high model accuracy.</p>
-          </div>
-        </div>
-
-        <!-- Item 2 -->
-        <div class="highlight-item">
-          <div class="highlight-icon">2</div>
-          <div class="highlight-content">
-            <h4>Low-Value Data Overload</h4>
-            <p>Redundant and vibration-amplified streams saturate onboard pipelines and waste compute.</p>
-          </div>
-        </div>
-
-        <!-- Item 3 -->
-        <div class="highlight-item">
-          <div class="highlight-icon">3</div>
-          <div class="highlight-content">
-            <h4>Delayed Informative Evidence</h4>
-            <p>High-value frames arrive too late, degrading real-time decision reliability.</p>
-          </div>
-        </div>
-
-      </div>
-    </div>
+<!-- Item 3 -->
+<div class="highlight-item">
+  <div class="highlight-icon">
+    <svg viewBox="0 0 24 24">
+      <polyline points="4 17 10 11 13 14 20 7"/>
+    </svg>
+  </div>
+  <div class="highlight-content">
+    <h4>Delayed Informative Evidence</h4>
+    <p>High-value frames arrive too late, degrading real-time decision reliability.</p>
+  </div>
+</div>
 
     <!-- 🔥 Bridge -->
     <div class="bridge-text">
@@ -216,19 +221,34 @@
 
 /* ===== NUMBER ICON ===== */
 .highlight-icon {
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
 
   border-radius: 50%;
-  background: #223253;
+  background: linear-gradient(135deg, #223253, #2f4a85);
   color: white;
-
-  font-size: 0.8rem;
-  font-weight: 600;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
+  transition: all 0.3s ease;
+}
+
+/* SVG styling */
+.highlight-icon svg {
+  width: 16px;
+  height: 16px;
+  stroke: white;
+  stroke-width: 2;
+  fill: none;
+}
+
+/* 🔥 INTERACTIVE EFFECT */
+.highlight-item:hover .highlight-icon {
+  transform: scale(1.15) rotate(5deg);
+  background: linear-gradient(135deg, #c05e3c, #d97757);
 }
 
 /* ===== CONTENT ===== */
