@@ -6,7 +6,7 @@
 
     <h2 class="section-heading reveal">Key Contributions</h2>
 
-    <!-- FIX 1 + 2 -->
+    <!-- Intro -->
     <p class="intro-text reveal">
       We evaluate SenseGuard in Connected and Autonomous Vehicles (CAVs)—a demanding setting with massive sensor data, strict real-time constraints, and safety-critical decisions. Solutions that succeed here generalize naturally to broader robotic systems.
     </p>
@@ -16,9 +16,7 @@
 
       <!-- Card 1 -->
       <div class="contribution-card">
-        <div class="gif">
-          <img src="https://media.giphy.com/media/3o7TKtnuHOHHUjR38Y/giphy.gif" />
-        </div>
+        <img src="/images/filtering.png" alt="Adaptive filtering visualization" class="card-img"/>
         <h3>Adaptive Sensory Filtering</h3>
         <p>
           A vibration- and context-aware policy dynamically removes redundant data while preserving critical information.
@@ -28,9 +26,7 @@
 
       <!-- Card 2 -->
       <div class="contribution-card">
-        <div class="gif">
-          <img src="https://media.giphy.com/media/l0HlNaQ6gWfllcjDO/giphy.gif" />
-        </div>
+        <img src="/images/data-curation.png" alt="Failure aligned data curation" class="card-img"/>
         <h3>Failure-Aligned Data Curation</h3>
         <p>
           Instead of logging everything, the system captures compact, high-value data when perception degrades—focusing on critical events that accelerate model improvement.
@@ -39,9 +35,7 @@
 
       <!-- Card 3 -->
       <div class="contribution-card">
-        <div class="gif">
-          <img src="https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy.gif" />
-        </div>
+        <img src="/images/performance.png" alt="Performance improvements graph" class="card-img"/>
         <h3>Strong Real-World Performance</h3>
         <p>
           Achieves up to <strong>+20% accuracy</strong>, <strong>75% lower trajectory error</strong>, reduced latency,
@@ -56,17 +50,15 @@
 
 <style>
 
-/* ===== INTRO FIX ===== */
+/* ===== INTRO ===== */
 .intro-text {
-  width: 100%;                /* FIX 1 */
-  max-width: 100%;
+  width: 100%;
   font-size: 1.05rem;
   line-height: 1.8;
   color: #444;
   margin-bottom: 2.2rem;
 
-  text-align: justify;        /* FIX 2 */
-  text-justify: inter-word;
+  text-align: justify;
 }
 
 /* ===== GRID ===== */
@@ -78,46 +70,28 @@
 
 /* ===== CARD ===== */
 .contribution-card {
-  padding: 1.4rem;
+  padding: 1.2rem;
   border-radius: 12px;
 
   background: #ffffff;
   border: 1px solid #e4e8ef;
 
-  transition: all 0.3s ease;
-  cursor: pointer;
+  transition: all 0.25s ease;
 }
 
-/* ===== HOVER (FIX 3 + 5) ===== */
+/* ===== IMAGE ===== */
+.card-img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 0.8rem;
+}
+
+/* ===== HOVER ===== */
 .contribution-card:hover {
-  transform: translateY(-6px) scale(1.01);
-  box-shadow: 0 14px 35px rgba(0,0,0,0.08);
-  border-color: #c05e3c;
-}
-
-/* Glow effect */
-.contribution-card:hover::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 12px;
-  background: radial-gradient(circle, rgba(192,94,60,0.08), transparent 70%);
-  pointer-events: none;
-}
-
-/* ===== GIF ===== */
-.gif img {
-  width: 36px;
-  height: 36px;
-  object-fit: contain;
-  margin-bottom: 0.7rem;
-  opacity: 0.9;
-}
-
-/* Animate on hover */
-.contribution-card:hover .gif img {
-  transform: scale(1.15);
-  transition: transform 0.3s ease;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.06);
 }
 
 /* ===== TITLE ===== */
@@ -134,7 +108,7 @@
   line-height: 1.6;
   color: #555;
 
-  text-align: justify;   /* FIX 2 */
+  text-align: justify;
 }
 
 /* ===== MOBILE ===== */
