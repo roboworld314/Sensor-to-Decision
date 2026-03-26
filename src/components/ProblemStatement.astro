@@ -96,27 +96,26 @@
     <div class="image-pair">
 
       <!-- BEFORE -->
-      <div class="image-card">
-        <span class="tag tag-bad">Stale Perception</span>
+     <!-- BEFORE -->
+<div class="image-card">
+  <iframe 
+    src="https://drive.google.com/file/d/1R2sQOs8LKBlH2kDEpd74cFOKFQpBsW0X/preview"
+    allow="autoplay"
+    title="Failure video">
+  </iframe>
 
-        <iframe 
-          src="https://drive.google.com/file/d/1R2sQOs8LKBlH2kDEpd74cFOKFQpBsW0X/preview"
-          allow="autoplay"
-          title="Failure video">
-        </iframe>
-      </div>
+  <p class="image-label">Stale Perception</p>
+</div>
 
-      <!-- AFTER -->
-      <div class="image-card">
-        <span class="tag tag-good">Adaptive Sensing</span>
+<!-- AFTER -->
+<div class="image-card">
+  <img 
+    src="https://drive.google.com/thumbnail?id=1RfFGE0oFWyu_Y5CMWwD_ZAvSUXCY-Ycw&sz=w1000"
+    alt="Improved sensing"
+  />
 
-        <img 
-          src="https://drive.google.com/thumbnail?id=1RfFGE0oFWyu_Y5CMWwD_ZAvSUXCY-Ycw&sz=w1000"
-          alt="Improved sensing"
-        />
-      </div>
-
-    </div>
+  <p class="image-label">Adaptive Sensing</p>
+</div>
 
   </div>
 </section>
@@ -485,68 +484,54 @@
 }
 
 /* ===== CARD ===== */
+/* ===== IMAGE CARD LAYOUT ===== */
 .image-card {
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
   border-radius: 14px;
   overflow: hidden;
-  background: #111;
+  background: transparent;
+  border: none;
 
-  aspect-ratio: 16 / 9;
-
-  border: 1px solid #e4e8ef;
   transition: all 0.3s ease;
-}
-
-.image-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 14px 32px rgba(0,0,0,0.12);
 }
 
 /* ===== MEDIA ===== */
 .image-card iframe,
 .image-card img {
   width: 100%;
-  height: 100%;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
-  border: none;
-  transition: transform 0.4s ease;
+  border-radius: 12px;
+  border: 1px solid #e4e8ef;
 }
 
-.image-card:hover img,
-.image-card:hover iframe {
-  transform: scale(1.04);
+/* ===== LABEL BELOW IMAGE ===== */
+.image-label {
+  font-size: 0.9rem;
+  color: #555;
+  text-align: center;
+  font-weight: 500;
+  letter-spacing: 0.2px;
 }
 
-/* ===== TAGS ===== */
-.tag {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  padding: 0.35rem 0.7rem;
-  font-size: 0.7rem;
-  font-weight: 600;
-  border-radius: 20px;
-  color: white;
-  z-index: 2;
+/* subtle emphasis */
+.image-label::before {
+  content: "• ";
+  color: #c05e3c;
 }
 
-.tag-bad {
-  background: rgba(200, 60, 60, 0.9);
+/* ===== HOVER ===== */
+.image-card:hover iframe,
+.image-card:hover img {
+  transform: scale(1.02);
+  transition: 0.3s ease;
 }
 
-.tag-good {
-  background: rgba(40, 140, 90, 0.9);
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-  .image-pair {
-    grid-template-columns: 1fr;
-  }
-
-  .section-intro,
-  .group-description {
-    text-align: left;
-  }
+/* optional: slight lift */
+.image-card:hover {
+  transform: translateY(-4px);
 }
 </style>
