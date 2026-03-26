@@ -1,19 +1,37 @@
 ---
-// Hero.astro — Title section with paper name
+// Hero.astro — Enhanced Version
 ---
 
 <section id="hero" class="hero-section">
-  <div class="hero-background"></div>
+  <div class="hero-background">
+    
+    <!-- Animated Car -->
+    <img 
+      src="https://media.giphy.com/media/3o7aD2saalBwwftBIY/giphy.gif"
+      alt="Car Driving"
+      class="car-gif"
+    />
+
+    <div class="gradient-overlay"></div>
+  </div>
   
   <div class="hero-inner">
-    <!-- Main Title -->
+
+    <!-- Badge -->
+    <span class="hero-badge">IROS 2026 Submission</span>
+
+    <!-- Title -->
     <div class="hero-content">
       <h1 class="hero-title">
         SenseGuard: Sensor-to-Decision Adaptation for Reliable Agentic AI Robots
       </h1>
+
+      <p class="hero-subtitle">
+        Real-Time Adaptive Perception under Vibration and Resource Constraints
+      </p>
     </div>
 
-    <!-- Paper banner -->
+    <!-- Paper Box -->
     <div class="paper-box">
       <div class="paper-left">
         <span class="paper-icon">📄</span>
@@ -23,449 +41,192 @@
       <div class="paper-links">
         <a href="https://drive.google.com/file/d/1adc8mrF3CoUz2dJ_2IxYwd5p2cFx412H/view?usp=sharing"
            target="_blank" class="paper-btn paper-btn-primary">
-          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/>
-          </svg>
-          <span>Appendix</span>
+          Appendix
         </a>
 
-        <a href="#" class="paper-btn paper-btn-secondary" onclick="alert('We will publish soon! Thank you for your patience.'); return false;">
-          <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2C6.48 2 2 6.48 2 12a10 10 0 0 0 6.84 9.49c.5.09.66-.22.66-.48v-1.67c-2.78.61-3.37-1.2-3.37-1.2-.45-1.14-1.1-1.44-1.1-1.44-.9-.61.07-.6.07-.6 1 .07 1.53 1.02 1.53 1.02.88 1.51 2.31 1.07 2.87.82.09-.64.34-1.07.61-1.32-2.22-.25-4.55-1.11-4.55-4.92 0-1.08.38-1.96 1.02-2.65-.1-.25-.44-1.28.1-2.67 0 0 .84-.27 2.75 1.02A9.6 9.6 0 0 1 12 6.84c.85 0 1.7.11 2.5.32 1.9-1.29 2.74-1.02 2.74-1.02.55 1.39.21 2.42.11 2.67.63.69 1.02 1.57 1.02 2.65 0 3.82-2.34 4.67-4.57 4.92.35.3.67.9.67 1.82v2.7c0 .27.17.58.67.48A10 10 0 0 0 22 12c0-5.52-4.48-10-10-10z"/>
-          </svg>
-          <span>Code</span>
+        <a href="#" class="paper-btn paper-btn-secondary"
+           onclick="alert('We will publish soon!'); return false;">
+          Code
         </a>
 
-        <a href="#" class="paper-btn paper-btn-secondary" onclick="alert('We will publish soon! Thank you for your patience.'); return false;">
-          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <ellipse cx="12" cy="5" rx="9" ry="3"/>
-            <path d="M3 5v6c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/>
-            <path d="M3 11v6c0 1.66 4.03 3 9 3s9-1.34 9-3v-6"/>
-          </svg>
-          <span>Dataset</span>
+        <a href="#" class="paper-btn paper-btn-secondary"
+           onclick="alert('We will publish soon!'); return false;">
+          Dataset
         </a>
 
         <a href="/video" class="paper-btn paper-btn-primary">
-          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <polygon points="23 7 16 12 23 17 23 7"/>
-            <rect x="1" y="5" width="15" height="14" rx="2"/>
-          </svg>
-          <span>Video</span>
+          Video
         </a>
       </div>
     </div>
+
   </div>
 </section>
 
 <style>
-  .hero-section {
-    padding: 4rem 3rem 3rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(135deg, rgba(245, 242, 240, 0.8) 0%, rgba(234, 231, 224, 0.5) 100%);
-    width: 100%;
-    box-sizing: border-box;
-  }
+/* ===== BASE ===== */
+.hero-section {
+  padding: 4rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f7f5f2 0%, #ece9e3 100%);
+}
 
-  .hero-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 0;
-    overflow: hidden;
-  }
+/* ===== BACKGROUND ===== */
+.hero-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
 
-  .hero-background::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 800px;
-    height: 800px;
-    background: radial-gradient(circle, rgba(192, 94, 60, 0.08) 0%, transparent 70%);
-    pointer-events: none;
-  }
+/* Animated car */
+.car-gif {
+  position: absolute;
+  bottom: 0;
+  left: -20%;
+  width: 500px;
+  opacity: 0.15;
+  animation: drive 18s linear infinite;
+}
 
-  .hero-background::after {
-    content: '';
-    position: absolute;
-    bottom: -30%;
-    right: -10%;
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(27, 42, 74, 0.05) 0%, transparent 70%);
-    pointer-events: none;
-  }
+@keyframes drive {
+  from { transform: translateX(0); }
+  to { transform: translateX(140vw); }
+}
 
-  .hero-inner {
-    position: relative;
-    z-index: 1;
-    max-width: 1200px;
-    margin: 0 auto;
-    width: 100%;
-    padding: 0 3rem;
-    box-sizing: border-box;
-  }
+/* Overlay */
+.gradient-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(255,255,255,0.95),
+    rgba(255,255,255,0.7),
+    transparent
+  );
+}
 
-  .hero-content {
-    margin-bottom: 2.5rem;
-    animation: fadeInDown 0.8s ease-out;
-    padding: 0;
-  }
+/* ===== CONTENT ===== */
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: auto;
+}
 
-  @keyframes fadeInDown {
-    from {
-      opacity: 0;
-      transform: translateY(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+/* Badge */
+.hero-badge {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: 0.3rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  background: rgba(34, 50, 83, 0.1);
+  color: #223253;
+}
 
-  /* Title */
+/* Title */
+.hero-title {
+  font-size: 3rem;
+  font-weight: 500;
+  line-height: 1.2;
+  background: linear-gradient(135deg, #1a2740, #2f4a85);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Subtitle */
+.hero-subtitle {
+  margin-top: 0.6rem;
+  font-size: 1.1rem;
+  color: #5c667a;
+}
+
+/* ===== PAPER BOX ===== */
+.paper-box {
+  margin-top: 2.5rem;
+  padding: 1.4rem;
+  border-radius: 16px;
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+
+  backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.75);
+
+  border: 1px solid rgba(255,255,255,0.4);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+
+  transition: all 0.3s ease;
+}
+
+.paper-box:hover {
+  transform: translateY(-4px);
+}
+
+/* Left */
+.paper-left {
+  font-weight: 600;
+  color: #223253;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Buttons */
+.paper-links {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.paper-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+/* Primary */
+.paper-btn-primary {
+  background: linear-gradient(135deg, #1f2f54, #2f4a85);
+  color: white;
+  box-shadow: 0 4px 15px rgba(47, 74, 133, 0.3);
+}
+
+.paper-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(47, 74, 133, 0.5);
+}
+
+/* Secondary */
+.paper-btn-secondary {
+  border: 1px solid #ccd2dc;
+  color: #223253;
+}
+
+.paper-btn-secondary:hover {
+  background: #223253;
+  color: white;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
   .hero-title {
-    font-family: var(--font-heading);
-    font-size: 3rem;
-    font-weight: 400;
-    color: var(--color-primary);
-    line-height: 1.2;
-    margin: 0 0 1.25rem 0;
-    letter-spacing: -0.015em;
-    word-break: break-word;
+    font-size: 2rem;
   }
 
-  /* Paper Box */
+  .car-gif {
+    width: 300px;
+  }
+
   .paper-box {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1.5rem;
-    width: 100%;
-    padding: 1.25rem 1.5rem;
-    background: #ffffff;
-    border-radius: 16px;
-    border: 2px solid var(--color-border-light);
-    box-shadow: 0 8px 32px rgba(27, 42, 74, 0.08);
-    transition: all 0.3s ease;
-    animation: fadeInUp 0.8s ease-out 0.2s both;
-    box-sizing: border-box;
+    flex-direction: column;
   }
-
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .paper-box:hover {
-    border-color: var(--color-accent);
-    box-shadow: 0 12px 40px rgba(192, 94, 60, 0.1);
-    transform: translateY(-2px);
-  }
-
-  .paper-left {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-weight: 600;
-    color: var(--color-primary);
-    white-space: nowrap;
-    font-size: 0.9rem;
-    flex-shrink: 0;
-  }
-
-  .paper-icon {
-    font-size: 1.3rem;
-    flex-shrink: 0;
-  }
-
-  /* Links */
-  .paper-links {
-    display: flex;
-    gap: 0.6rem;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  /* Buttons */
-  .paper-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.55rem 1rem;
-    border-radius: 10px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    white-space: nowrap;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .paper-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.2);
-    transition: left 0.3s ease;
-    z-index: -1;
-  }
-
-  .paper-btn:hover::before {
-    left: 100%;
-  }
-
-  .paper-btn-primary {
-    background: linear-gradient(135deg, #223253 0%, #1a2740 100%);
-    color: white;
-  }
-
-  .paper-btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(34, 50, 83, 0.3);
-  }
-
-  .paper-btn-secondary {
-    background: transparent;
-    color: var(--color-primary);
-    border: 2px solid var(--color-border);
-  }
-
-  .paper-btn-secondary:hover {
-    background: var(--color-primary);
-    color: white;
-    border-color: var(--color-primary);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(27, 42, 74, 0.2);
-  }
-
-  .btn-icon {
-    width: 16px;
-    height: 16px;
-    stroke-width: 2;
-    flex-shrink: 0;
-  }
-
-  /* ========== RESPONSIVE STYLES ========== */
-
-  /* Tablet (1024px and below) */
-  @media (max-width: 1024px) {
-    .hero-section {
-      padding: 3.5rem 2.5rem 3rem;
-    }
-
-    .hero-inner {
-      padding: 0 2.5rem;
-    }
-
-    .hero-title {
-      font-size: 2.5rem;
-    }
-
-    .paper-btn {
-      font-size: 0.8rem;
-      padding: 0.5rem 0.9rem;
-    }
-  }
-
-  /* Tablet (768px and below) */
-  @media (max-width: 768px) {
-    .hero-section {
-      padding: 3rem 1.75rem 2.5rem;
-    }
-
-    .hero-inner {
-      padding: 0 1.75rem;
-    }
-
-    .hero-content {
-      padding: 0;
-    }
-
-    .hero-title {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      line-height: 1.3;
-    }
-
-    .hero-content {
-      margin-bottom: 2rem;
-    }
-
-    .paper-box {
-      flex-direction: column;
-      gap: 1.25rem;
-      padding: 1rem 1.25rem;
-      border-radius: 14px;
-      width: 100%;
-    }
-
-    .paper-left {
-      font-size: 0.85rem;
-    }
-
-    .paper-icon {
-      font-size: 1.2rem;
-    }
-
-    .paper-links {
-      gap: 0.5rem;
-      width: 100%;
-    }
-
-    .paper-btn {
-      font-size: 0.75rem;
-      padding: 0.5rem 0.8rem;
-      flex: 1;
-      min-width: 75px;
-      justify-content: center;
-    }
-
-    .btn-icon {
-      width: 14px;
-      height: 14px;
-    }
-  }
-
-  /* Mobile (480px and below) */
-  @media (max-width: 480px) {
-    .hero-section {
-      padding: 2.5rem 1.25rem 2rem;
-    }
-
-    .hero-inner {
-      padding: 0 1.25rem;
-    }
-
-    .hero-content {
-      padding: 0;
-      margin-bottom: 1.5rem;
-    }
-
-    .hero-title {
-      font-size: 1.6rem;
-      margin-bottom: 0.75rem;
-      line-height: 1.25;
-    }
-
-    .paper-box {
-      flex-direction: column;
-      gap: 1rem;
-      padding: 0.9rem 1rem;
-      border-radius: 12px;
-      width: 100%;
-    }
-
-    .paper-left {
-      font-size: 0.75rem;
-    }
-
-    .paper-icon {
-      font-size: 1.1rem;
-    }
-
-    .paper-links {
-      gap: 0.35rem;
-      width: 100%;
-    }
-
-    .paper-btn {
-      font-size: 0.7rem;
-      padding: 0.4rem 0.6rem;
-      flex: 1;
-      min-width: 60px;
-      border-radius: 8px;
-    }
-
-    .btn-icon {
-      width: 12px;
-      height: 12px;
-    }
-  }
-
-  /* Extra Small (360px and below) */
-  @media (max-width: 360px) {
-    .hero-section {
-      padding: 2rem 1rem 1.5rem;
-    }
-
-    .hero-inner {
-      padding: 0 1rem;
-    }
-
-    .hero-content {
-      padding: 0;
-    }
-
-    .hero-title {
-      font-size: 1.4rem;
-      margin-bottom: 0.6rem;
-    }
-
-    .paper-box {
-      padding: 0.8rem 0.85rem;
-      width: 100%;
-    }
-
-    .paper-btn {
-      font-size: 0.65rem;
-      padding: 0.35rem 0.5rem;
-      min-width: 55px;
-    }
-  }
-
-  /* Extra Small (320px and below) */
-  @media (max-width: 320px) {
-    .hero-section {
-      padding: 1.75rem 0.75rem 1.5rem;
-    }
-
-    .hero-inner {
-      padding: 0 0.75rem;
-    }
-
-    .hero-content {
-      padding: 0;
-    }
-
-    .hero-title {
-      font-size: 1.3rem;
-      letter-spacing: -0.01em;
-    }
-
-    .paper-box {
-      padding: 0.75rem 0.8rem;
-      gap: 0.8rem;
-      width: 100%;
-    }
-
-    .paper-btn {
-      font-size: 0.6rem;
-      padding: 0.3rem 0.45rem;
-      min-width: 50px;
-    }
-
-    .paper-left {
-      font-size: 0.7rem;
-    }
-  }
+}
 </style>
