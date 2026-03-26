@@ -1,13 +1,13 @@
 ---
-// Hero.astro — Clean Professional Version
+// Hero.astro — Interactive + Vehicle Visual
 ---
 
 <section id="hero" class="hero-section">
-  
+
   <div class="hero-inner">
 
-    <!-- Title -->
-    <div class="hero-content">
+    <!-- LEFT CONTENT -->
+    <div class="hero-left">
       <h1 class="hero-title">
         SenseGuard: Sensor-to-Decision Adaptation for Reliable Agentic AI Robots
       </h1>
@@ -15,177 +15,177 @@
       <p class="hero-subtitle">
         Real-Time Adaptive Perception Decision Making under Vibration and Resource Constraints
       </p>
+
+      <!-- Paper Box -->
+      <div class="paper-box">
+        <div class="paper-left">
+          <span class="paper-icon">📄</span>
+          <span class="paper-title">Supplementary Materials</span>
+        </div>
+
+        <div class="paper-links">
+
+          <a href="https://drive.google.com/file/d/1adc8mrF3CoUz2dJ_2IxYwd5p2cFx412H/view"
+             target="_blank" class="paper-btn paper-btn-primary">
+            Appendix
+          </a>
+
+          <a href="#" class="paper-btn paper-btn-secondary"
+             onclick="alert('We will publish soon!'); return false;">
+            Code
+          </a>
+
+          <a href="#" class="paper-btn paper-btn-secondary"
+             onclick="alert('We will publish soon!'); return false;">
+            Dataset
+          </a>
+
+          <a href="/video" class="paper-btn paper-btn-primary">
+            Demo Video
+          </a>
+
+        </div>
+      </div>
     </div>
 
-    <!-- Paper Box -->
-    <div class="paper-box">
-      <div class="paper-left">
-        <span class="paper-icon">📄</span>
-        <span class="paper-title">Supplementary Materials</span>
+    <!-- RIGHT VISUAL -->
+    <div class="hero-right">
+
+      <!-- Clean animated vehicle (SVG, professional) -->
+      <div class="vehicle-wrapper">
+        <img 
+          src="https://cdn-icons-png.flaticon.com/512/744/744465.png" 
+          alt="Autonomous Vehicle"
+          class="vehicle"
+        />
       </div>
 
-      <div class="paper-links">
-
-        <!-- Appendix -->
-        <a href="https://drive.google.com/file/d/1adc8mrF3CoUz2dJ_2IxYwd5p2cFx412H/view?usp=sharing"
-           target="_blank" class="paper-btn paper-btn-primary">
-          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/>
-          </svg>
-          Appendix
-        </a>
-
-        <!-- Code -->
-        <a href="#" class="paper-btn paper-btn-secondary"
-           onclick="alert('We will publish soon!'); return false;">
-          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <polyline points="16 18 22 12 16 6"/>
-            <polyline points="8 6 2 12 8 18"/>
-          </svg>
-          Code
-        </a>
-
-        <!-- Dataset -->
-        <a href="#" class="paper-btn paper-btn-secondary"
-           onclick="alert('We will publish soon!'); return false;">
-          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <ellipse cx="12" cy="5" rx="9" ry="3"/>
-            <path d="M3 5v6c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/>
-            <path d="M3 11v6c0 1.66 4.03 3 9 3s9-1.34 9-3v-6"/>
-          </svg>
-          Dataset
-        </a>
-
-        <!-- Video -->
-        <a href="/video" class="paper-btn paper-btn-primary">
-          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <polygon points="23 7 16 12 23 17 23 7"/>
-            <rect x="1" y="5" width="15" height="14" rx="2"/>
-          </svg>
-          Demo Video
-        </a>
-
-      </div>
     </div>
 
   </div>
 </section>
 
 <style>
-/* ===== BASE ===== */
+
+/* ===== LAYOUT ===== */
 .hero-section {
   padding: 4rem 2rem;
-  text-align: center;
-  background: linear-gradient(135deg, #f7f5f2 0%, #ece9e3 100%);
+  background: linear-gradient(135deg, #f7f5f2, #ece9e3);
 }
 
-/* ===== CONTENT ===== */
 .hero-inner {
   max-width: 1100px;
   margin: auto;
+
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: 2rem;
 }
 
-/* Title */
+/* ===== LEFT ===== */
+.hero-left {
+  text-align: left;
+}
+
+/* ===== TITLE ===== */
 .hero-title {
-  font-size: 3rem;
-  font-weight: 500;
+  font-size: 2.8rem;
   line-height: 1.2;
+
   background: linear-gradient(135deg, #1a2740, #2f4a85);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* Subtitle */
+/* ===== SUBTITLE ===== */
 .hero-subtitle {
-  margin-top: 0.6rem;
+  margin-top: 0.7rem;
   font-size: 1.05rem;
   color: #5c667a;
 }
 
+/* ===== VEHICLE ===== */
+.hero-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.vehicle-wrapper {
+  position: relative;
+  width: 260px;
+}
+
+/* subtle floating animation */
+.vehicle {
+  width: 100%;
+  opacity: 0.9;
+
+  animation: floatCar 4s ease-in-out infinite;
+  transition: transform 0.3s ease;
+}
+
+.vehicle:hover {
+  transform: scale(1.05);
+}
+
+/* floating effect */
+@keyframes floatCar {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
 /* ===== PAPER BOX ===== */
 .paper-box {
-  margin-top: 2.2rem;
-  padding: 1rem 1.2rem;
+  margin-top: 2rem;
+  padding: 1rem;
 
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 0.8rem;
+  gap: 0.6rem;
 
-  border-radius: 14px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.75);
   backdrop-filter: blur(10px);
 
   border: 1px solid rgba(0,0,0,0.05);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
-
-  transition: all 0.25s ease;
+  transition: 0.25s ease;
 }
 
 .paper-box:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 }
 
-/* Left */
-.paper-left {
-  font-weight: 600;
-  color: #223253;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.9rem;
-}
-
-/* Buttons */
+/* ===== BUTTONS ===== */
 .paper-links {
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
 }
 
-/* Button Base */
 .paper-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-
-  padding: 0.45rem 0.85rem;
+  padding: 0.4rem 0.8rem;
   border-radius: 8px;
-
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 500;
   text-decoration: none;
-
-  transition: all 0.25s ease;
+  transition: 0.25s ease;
 }
 
-/* Icon */
-.btn-icon {
-  width: 14px;
-  height: 14px;
-  stroke-width: 1.8;
-  opacity: 0.85;
-}
-
-/* Primary */
 .paper-btn-primary {
   background: linear-gradient(135deg, #1f2f54, #2f4a85);
   color: white;
-  box-shadow: 0 3px 12px rgba(47, 74, 133, 0.25);
 }
 
 .paper-btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(47, 74, 133, 0.35);
+  transform: translateY(-2px);
 }
 
-/* Secondary */
 .paper-btn-secondary {
   border: 1px solid #d6dbe4;
   color: #3a445a;
-  background: transparent;
 }
 
 .paper-btn-secondary:hover {
@@ -195,12 +195,22 @@
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
+  .hero-inner {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .hero-left {
+    text-align: center;
+  }
+
   .hero-title {
     font-size: 2rem;
   }
 
-  .paper-box {
-    flex-direction: column;
+  .vehicle-wrapper {
+    width: 180px;
   }
 }
+
 </style>
