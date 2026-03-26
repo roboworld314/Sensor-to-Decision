@@ -1,4 +1,5 @@
 ---
+// ContentParagraphs.astro — Contributions (Final Fixed Version)
 ---
 
 <section id="content-paragraphs" class="content-section">
@@ -16,7 +17,11 @@
 
       <!-- Card 1 -->
       <div class="contribution-card">
-        <img src="/images/filtering.png" alt="Adaptive filtering visualization" class="card-img"/>
+        <img 
+          src="https://drive.google.com/thumbnail?id=1cCOkD-07gkVU_4yxMg31fcoXqf5gX9MT&sz=w1000" 
+          alt="Adaptive filtering visualization"
+          class="card-img"
+        />
         <h3>Adaptive Sensory Filtering</h3>
         <p>
           A vibration- and context-aware policy dynamically removes redundant data while preserving critical information.
@@ -26,7 +31,11 @@
 
       <!-- Card 2 -->
       <div class="contribution-card">
-        <img src="/images/data-curation.png" alt="Failure aligned data curation" class="card-img"/>
+        <img 
+          src="https://drive.google.com/thumbnail?id=16Yvv_30e39Ls8XdcL4X_U8xKTXmARlnF&sz=w1000" 
+          alt="Failure aligned data curation"
+          class="card-img"
+        />
         <h3>Failure-Aligned Data Curation</h3>
         <p>
           Instead of logging everything, the system captures compact, high-value data when perception degrades—focusing on critical events that accelerate model improvement.
@@ -35,7 +44,11 @@
 
       <!-- Card 3 -->
       <div class="contribution-card">
-        <img src="/images/performance.png" alt="Performance improvements graph" class="card-img"/>
+        <img 
+          src="https://drive.google.com/thumbnail?id=1cCOkD-07gkVU_4yxMg31fcoXqf5gX9MT&sz=w1000" 
+          alt="Performance results"
+          class="card-img"
+        />
         <h3>Strong Real-World Performance</h3>
         <p>
           Achieves up to <strong>+20% accuracy</strong>, <strong>75% lower trajectory error</strong>, reduced latency,
@@ -50,15 +63,40 @@
 
 <style>
 
-/* ===== INTRO ===== */
+/* ===== SECTION ===== */
+.content-section {
+  padding: 4rem 2rem 3rem;
+}
+
+/* ===== HEADING ===== */
+.section-heading {
+  font-size: 1.6rem;
+  color: #223253;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.section-heading::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 55px;
+  height: 3px;
+  background: #c05e3c;
+}
+
+/* ===== INTRO FIX ===== */
 .intro-text {
   width: 100%;
+  max-width: 100%;
   font-size: 1.05rem;
   line-height: 1.8;
   color: #444;
   margin-bottom: 2.2rem;
 
   text-align: justify;
+  text-justify: inter-word;
 }
 
 /* ===== GRID ===== */
@@ -82,16 +120,19 @@
 /* ===== IMAGE ===== */
 .card-img {
   width: 100%;
-  height: 140px;
+  height: 150px;
   object-fit: cover;
   border-radius: 8px;
   margin-bottom: 0.8rem;
+
+  background: #f2f2f2;
 }
 
 /* ===== HOVER ===== */
 .contribution-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 28px rgba(0,0,0,0.06);
+  border-color: #c05e3c;
 }
 
 /* ===== TITLE ===== */
