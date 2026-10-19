@@ -1,0 +1,135 @@
+---
+import { asset } from '../lib/asset';
+
+const causes = [
+  {
+    title: 'Near-duplicate frames',
+    body: 'When the scene changes slowly, consecutive frames add almost nothing, yet each one still takes its turn in the queue ahead of the next informative frame.',
+  },
+  {
+    title: 'Low information density',
+    body: 'Sky, road surface and distant background fill most of each frame or scan. They cost compute and memory without changing the next decision.',
+  },
+  {
+    title: 'Vibration',
+    body: 'Motion blur in the camera and ghost points and distortion in LiDAR make an unchanged scene look different, so similarity filters let redundant data through.',
+  },
+];
+---
+
+<section class="section" id="problem" aria-labelledby="problem-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="problem-h">The staleness gap</h2>
+      <p class="lede">
+        Field failures in agentic robots often trace to a sensor-to-decision bottleneck, not a weak model. Per-frame
+        accuracy and latency can look good while the robot acts on frames the scene has already left behind.
+      </p>
+    </div>
+
+    <div class="gap-grid">
+      <figure>
+        <div class="figure-frame fig1">
+          <img
+            src={asset('images/fig1-staleness-gap.webp')}
+            width="1600"
+            height="794"
+            loading="lazy"
+            alt="Line chart of present-world accuracy for 20 detectors, M1 to M20. A blue scene-current upper bound stays between about 0.75 and 0.98; a red default full-rate FIFO line stays between about 0.28 and 0.45, an average gap of 0.44. Below, frames from t minus N to t minus 1 are processed while the current scene at time t shows a pedestrian and a scooter the stale result misses."
+          />
+        </div>
+        <figcaption class="caption">
+          Paper, Fig. 1. Replaying the same streams through the default full-rate FIFO pipeline (red) against a
+          scene-current upper bound (blue) across 20 widely used detectors. The FIFO output trails by 0.44
+          present-world accuracy on average, because the queue keeps inference on frames from t − N to t − 1 while the
+          scene has moved to t.
+        </figcaption>
+      </figure>
+
+      <div class="why">
+        <h3>Where the lag comes from</h3>
+        <p class="prose">
+          Low-value inputs reach the pipeline at full rate and wait in line with everything else. Three kinds dominate:
+        </p>
+        <dl>
+          {
+            causes.map((c) => (
+              <div>
+                <dt>{c.title}</dt>
+                <dd>{c.body}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </div>
+
+    <aside class="skew">
+      <h3>The same data skew learning</h3>
+      <p>
+        Over longer time scales, routine logging fills with frequent, low-signal scenes, while the rare, difficult
+        events that shape the decision boundary stay under-sampled. More data becomes more of the same, and robustness
+        to rare conditions stalls.
+      </p>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .gap-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+    gap: clamp(32px, 5vw, 64px);
+    align-items: start;
+  }
+
+  .fig1 {
+    padding: clamp(0.5rem, 1.5vw, 1rem);
+  }
+
+  .why h3 {
+    margin-bottom: 0.6rem;
+  }
+
+  dl {
+    display: grid;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+  }
+
+  dl > div {
+    padding-left: 1rem;
+    border-left: 2px solid var(--stale);
+  }
+
+  dt {
+    font-weight: 600;
+    font-size: 1.0625rem;
+  }
+
+  dd {
+    margin-top: 0.2rem;
+    color: var(--ink-2);
+  }
+
+  .skew {
+    display: grid;
+    grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+    gap: 1rem 3rem;
+    margin-top: clamp(48px, 6vw, 72px);
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .skew p {
+    max-width: var(--measure);
+    color: var(--ink-2);
+  }
+
+  @media (max-width: 900px) {
+    .gap-grid,
+    .skew {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

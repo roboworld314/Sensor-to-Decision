@@ -1,0 +1,207 @@
+---
+// Accuracy vs latency scatter (paper, Table VIII). One accent (SenseGuard),
+// every other strategy in the muted mark color, all points direct-labeled.
+import type { Strategy } from '../../data/paper';
+
+type Anchor = 'r' | 'l' | 'a' | 'b';
+interface Props {
+  title: string;
+  data: Strategy[];
+  x: [number, number];
+  y: [number, number];
+  xTicks: number[];
+  yTicks: number[];
+  anchors: Record<string, Anchor>;
+}
+
+const { title, data, x, y, xTicks, yTicks, anchors } = Astro.props;
+const px = (v: number) => ((v - x[0]) / (x[1] - x[0])) * 100;
+const py = (v: number) => 100 - ((v - y[0]) / (y[1] - y[0])) * 100;
+---
+
+<figure class="sc">
+  <figcaption class="sc-title">{title}</figcaption>
+  <div class="sc-body">
+    <p class="sc-ylab">mAP (%)</p>
+    <div class="sc-plot">
+      {yTicks.map((t) => <div class="gy" style={`top:${py(t)}%`}><span>{t}</span></div>)}
+      {xTicks.map((t) => <div class="gx" style={`left:${px(t)}%`}><span>{t}</span></div>)}
+      <p class="sc-hint">Better: up and to the left</p>
+      {
+        data.map((d) => (
+          <>
+            <span
+              class:list={['pt', { 'is-ours': d.ours }]}
+              style={`left:${px(d.latency)}%;top:${py(d.map)}%`}
+              tabindex="0"
+              role="img"
+              aria-label={`${d.name}: ${d.map}% mAP at ${d.latency} ms`}
+              data-tip-value={`${d.map}% mAP, ${d.latency} ms`}
+              data-tip-label={d.name}
+            />
+            <span
+              class:list={['pl', `pl-${anchors[d.name] ?? 'r'}`, { 'is-ours': d.ours }]}
+              style={`left:${px(d.latency)}%;top:${py(d.map)}%`}
+              aria-hidden="true"
+            >
+              {d.name}
+            </span>
+          </>
+        ))
+      }
+    </div>
+    <p class="sc-xlab">Inference latency (ms)</p>
+  </div>
+</figure>
+
+<style>
+  .sc {
+    min-width: 0;
+  }
+
+  .sc-title {
+    font-weight: 600;
+    font-size: 1.0625rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .sc-body {
+    display: grid;
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    grid-template-rows: auto auto;
+  }
+
+  .sc-ylab {
+    grid-column: 1 / -1;
+    font-size: 0.8125rem;
+    color: var(--ink-3);
+    margin-bottom: 0.6rem;
+  }
+
+  .sc-plot {
+    grid-column: 2;
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-left: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .gy,
+  .gx {
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .gy {
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--rule-soft);
+  }
+
+  .gy span {
+    position: absolute;
+    right: calc(100% + 8px);
+    top: -0.55rem;
+    font-size: 0.8125rem;
+    color: var(--ink-3);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .gx {
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--rule-soft);
+  }
+
+  .gx span {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.8125rem;
+    color: var(--ink-3);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sc-hint {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.75rem;
+    font-size: 0.8125rem;
+    color: var(--ink-3);
+    font-style: italic;
+  }
+
+  .pt {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    margin: -6px 0 0 -6px;
+    border-radius: 50%;
+    background: var(--mark-quiet);
+    box-shadow: 0 0 0 2px var(--surface);
+    cursor: default;
+    z-index: 2;
+  }
+
+  /* Hit target larger than the mark. */
+  .pt::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+  }
+
+  .pt:hover,
+  .pt:focus-visible {
+    box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--ink);
+    outline: none;
+  }
+
+  .pt.is-ours {
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    background: var(--fresh);
+  }
+
+  .pl {
+    position: absolute;
+    font-size: 0.875rem;
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--ink-2);
+    pointer-events: none;
+  }
+
+  .pl.is-ours {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .pl-r {
+    transform: translate(12px, -50%);
+  }
+
+  .pl-l {
+    transform: translate(calc(-100% - 12px), -50%);
+  }
+
+  .pl-a {
+    transform: translate(-50%, calc(-100% - 11px));
+  }
+
+  .pl-b {
+    transform: translate(-50%, 11px);
+  }
+
+  .sc-xlab {
+    grid-column: 2;
+    margin-top: 1.9rem;
+    font-size: 0.8125rem;
+    color: var(--ink-3);
+    text-align: center;
+  }
+</style>

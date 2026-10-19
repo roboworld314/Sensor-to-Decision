@@ -1,0 +1,774 @@
+---
+import { asset } from '../lib/asset';
+
+const flow = [
+  { name: 'Camera and LiDAR', note: 'High-rate streams', key: false },
+  { name: 'Frame deduplication', note: 'Temporal redundancy', key: true },
+  { name: 'Downsampling', note: 'Spatial redundancy', key: true },
+  { name: 'Detector', note: 'Held fixed', key: false },
+  { name: 'Planner', note: 'Acts on fresh evidence', key: false },
+];
+
+const matrix = {
+  camera: {
+    fd: {
+      title: 'Visual and semantic change, fused by a learned policy',
+      body: 'SigLIP embeddings measure visual change from the last kept frame. Qwen2.5-VL-3B adds scene context, but only on periodic keyframes and visually ambiguous frames; its last valid output is reused in between. A lightweight PPO-trained policy turns both cues into a fidelity level.',
+    },
+    ds: {
+      title: 'Area-average downsampling',
+      body: 'Each b × b block becomes its mean, with b set by the frame’s fidelity. Averaging b² pixels cuts independent noise variance to σ²/b² and damps small vibration jitter. Severely blurred frames stay at full fidelity.',
+    },
+  },
+  lidar: {
+    fd: {
+      title: 'Bird’s-eye-view χ² test with a semantic review band',
+      body: 'Each scan is rasterized to a BEV grid and compared with the last kept scan by χ² histogram distance. Clear changes are kept and clear duplicates dropped. Only scans near the threshold, fewer than 15%, go to the VLM, so a pedestrian that alters a few cells is not lost.',
+    },
+    ds: {
+      title: 'Voxel-grid filtering with a calibrated leaf size',
+      body: 'Points in each voxel collapse to their centroid. Leaf size λ is calibrated by replaying KITTI through KISS-ICP within fixed ATE and ARE budgets, and shrinks as vibration rises.',
+    },
+  },
+};
+
+const fidelity = [
+  { cls: 'is-bypass', name: 'Bypass', body: 'Near-duplicate. Not processed; the last prediction is carried forward.' },
+  { cls: 'is-reduced', name: 'Reduced', body: 'Moderately novel. Processed with larger blocks or voxels.' },
+  { cls: '', name: 'Full', body: 'Distinct, safety-critical, or strongly changed. Processed at full detail.' },
+];
+
+const cot = [
+  {
+    step: 'Scene context',
+    rows: [
+      ['Environment', 'Snowy, rural highway'],
+      ['Time', 'Daylight'],
+      ['Road', 'Two-way road'],
+      ['Lane', 'Snow-covered with tire tracks'],
+      ['Objects', 'A child near the roadway'],
+    ],
+  },
+  {
+    step: 'Risk analysis',
+    rows: [
+      ['Impact', 'High risk; limited traction and visibility'],
+      ['Risk factor', 'The child may step into the lane unexpectedly'],
+    ],
+  },
+  {
+    step: 'Scene-aware decision',
+    rows: [
+      ['Meta actions', 'Slow down; prepare to stop'],
+      ['Description', 'Be ready to stop if the child begins crossing. Avoid passing until the risk clears.'],
+    ],
+  },
+];
+
+const modes = [
+  {
+    name: 'Routine buffering',
+    body: 'Time-synchronized camera, LiDAR and vehicle-state messages stream into a ROS circular buffer, overwriting the oldest. The window grows toward T_max when confidence variance rises and shrinks toward T_min when perception is stable. Nothing is stored long-term.',
+  },
+  {
+    name: 'Pre-event commit',
+    body: 'A quality score built from inference confidence and temporal stability flags degradation. Only when it persists for a calibrated interval does overwriting stop and the buffered window before t₀ get committed, atomically, across modalities.',
+  },
+  {
+    name: 'Post-event recording',
+    body: 'Recording runs for T_p and extends by ΔT while degradation persists, up to T_cap. Pre-event data stay immutable.',
+  },
+  {
+    name: 'Finalize and retrain',
+    body: 'After T_stable of steady perception the capsule closes and routine buffering resumes. Capsules feed targeted retraining, and the updated weights are redeployed to the robot.',
+  },
+];
+
+const sub = (s: string) => s.replace(/_(\w+)/g, '<sub>$1</sub>');
+---
+
+<section class="section" id="method" aria-labelledby="method-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="method-h">How SenseGuard works</h2>
+      <p class="lede">
+        A two-stage Sensor-to-Decision pipeline that treats robustness as a decision-time freshness objective. Stage 1
+        decides, frame by frame, which data deserve scarce onboard compute. Stage 2 decides which data are worth
+        keeping, so the next model learns from the moments the current one struggled.
+      </p>
+    </div>
+
+    <!-- Stage 1 -->
+    <article class="stage" aria-labelledby="stage1-h">
+      <header class="stage-rail">
+        <p class="stage-num">Stage 1</p>
+        <h3 id="stage1-h">Online data plane</h3>
+        <p class="stage-when">Runs on the robot at sensor rate</p>
+      </header>
+
+      <div class="stage-body">
+        <ol class="flow" aria-label="Online pipeline">
+          {
+            flow.map((n) => (
+              <li class:list={['node', { 'is-key': n.key }]}>
+                <strong>{n.name}</strong>
+                <span>{n.note}</span>
+              </li>
+            ))
+          }
+        </ol>
+
+        <div class="matrix">
+          <div class="mx-corner" aria-hidden="true"></div>
+          <p class="mx-col">Temporal redundancy<span>Frame deduplication</span></p>
+          <p class="mx-col">Spatial redundancy<span>Downsampling</span></p>
+
+          <p class="mx-row">Camera</p>
+          <div class="mx-cell">
+            <p class="mx-tag">Camera, temporal</p>
+            <h4>{matrix.camera.fd.title}</h4>
+            <p>{matrix.camera.fd.body}</p>
+          </div>
+          <div class="mx-cell">
+            <p class="mx-tag">Camera, spatial</p>
+            <h4>{matrix.camera.ds.title}</h4>
+            <p>{matrix.camera.ds.body}</p>
+          </div>
+
+          <p class="mx-row">LiDAR</p>
+          <div class="mx-cell">
+            <p class="mx-tag">LiDAR, temporal</p>
+            <h4>{matrix.lidar.fd.title}</h4>
+            <p>{matrix.lidar.fd.body}</p>
+          </div>
+          <div class="mx-cell">
+            <p class="mx-tag">LiDAR, spatial</p>
+            <h4>{matrix.lidar.ds.title}</h4>
+            <p>{matrix.lidar.ds.body}</p>
+          </div>
+        </div>
+
+        <div class="fidelity">
+          <h4>Every frame gets one of three fidelity levels</h4>
+          <ul>
+            {
+              fidelity.map((f) => (
+                <li>
+                  <i class:list={['tile', f.cls]} aria-hidden="true" />
+                  <div>
+                    <strong>{f.name}</strong>
+                    <p>{f.body}</p>
+                  </div>
+                </li>
+              ))
+            }
+          </ul>
+          <p class="caption">
+            A deterministic safety override forces Full whenever a safety-critical cue is present or the semantic change
+            is strong. The PPO reward balances detection accuracy, tracking continuity and compute cost, and the deployed
+            policy is chosen from the Pareto frontier before further savings start to hurt perception.
+          </p>
+        </div>
+
+        <figure class="cot">
+          <h4>What the vision-language model contributes</h4>
+          <div class="cot-grid">
+            <img
+              src={asset('images/cot-snowy-highway.jpg')}
+              width="900"
+              height="512"
+              loading="lazy"
+              alt="Dashcam view of a snow-covered two-lane rural road in daylight, with a child in an orange jacket at the right edge of the road."
+            />
+            <ol class="cot-steps">
+              {
+                cot.map((c) => (
+                  <li>
+                    <p class="cot-step">{c.step}</p>
+                    <dl>
+                      {c.rows.map(([k, v]) => (
+                        <div>
+                          <dt>{k}</dt>
+                          <dd>{v}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </li>
+                ))
+              }
+            </ol>
+          </div>
+          <figcaption class="caption">
+            Paper, Table I. The three-step structured chain of thought on a snowy rural highway. The output decides what
+            to keep, never how the robot drives; output that fails schema validation falls back to keeping the frame in
+            full.
+          </figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <!-- Stage 2 -->
+    <article class="stage" aria-labelledby="stage2-h">
+      <header class="stage-rail">
+        <p class="stage-num">Stage 2</p>
+        <h3 id="stage2-h">Offline control plane</h3>
+        <p class="stage-when">Triggered when perception degrades</p>
+      </header>
+
+      <div class="stage-body">
+        <p class="prose">
+          Stage 1 keeps evidence fresh, but drift in weather, terrain or traffic can still erode perception. No ground
+          truth is available on board, so SenseGuard watches confidence and prediction stability instead, and turns
+          sustained drops into compact, synchronized evidence capsules spanning before, during and after the failure.
+        </p>
+
+        <figure class="capsule">
+          <div class="cap-scroll">
+            <div class="cap-diagram" aria-hidden="true">
+              <div class="cap-bracket"><span>Evidence capsule: camera, LiDAR and vehicle state</span></div>
+              <div class="cap-row">
+                <div class="cap-zone z-gone" style="--n:4">
+                  <div class="cap-tiles">{Array.from({ length: 4 }).map(() => <i class="tile is-bypass" />)}</div>
+                  <p>Overwritten</p>
+                </div>
+                <div class="cap-zone z-pre" style="--n:6">
+                  <div class="cap-tiles">{Array.from({ length: 6 }).map(() => <i class="tile is-plain" />)}</div>
+                  <p>Pre-event window</p>
+                </div>
+                <div class="cap-mark"><span>t<sub>0</sub> sustained drop</span></div>
+                <div class="cap-zone z-during" style="--n:4">
+                  <div class="cap-tiles">{Array.from({ length: 4 }).map(() => <i class="tile is-stale" />)}</div>
+                  <p>Degradation</p>
+                </div>
+                <div class="cap-zone z-post" style="--n:4">
+                  <div class="cap-tiles">{Array.from({ length: 4 }).map(() => <i class="tile" />)}</div>
+                  <p>Recovery</p>
+                </div>
+                <div class="cap-mark"><span>Stable for T<sub>stable</sub></span></div>
+                <div class="cap-zone z-gone" style="--n:3">
+                  <div class="cap-tiles">{Array.from({ length: 3 }).map(() => <i class="tile is-bypass" />)}</div>
+                  <p>Routine resumes</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <figcaption class="caption">
+            Redrawn from paper, Fig. 4. During routine operation the buffer overwrites itself, so memory stays constant.
+            A sustained drop freezes the pre-event window and records through recovery, so each capsule holds the
+            precursors of a failure as well as the failure itself.
+          </figcaption>
+        </figure>
+
+        <ol class="modes">
+          {
+            modes.map((m) => (
+              <li>
+                <h4>{m.name}</h4>
+                <p set:html={sub(m.body)} />
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </article>
+  </div>
+</section>
+
+<style>
+  .stage {
+    display: grid;
+    grid-template-columns: 13rem minmax(0, 1fr);
+    gap: clamp(24px, 4vw, 56px);
+    padding-top: clamp(2rem, 4vw, 3rem);
+    border-top: 2px solid var(--ink);
+  }
+
+  .stage + .stage {
+    margin-top: clamp(4rem, 8vw, 6.5rem);
+  }
+
+  .stage-rail {
+    align-self: start;
+    position: sticky;
+    top: 84px;
+  }
+
+  .stage-num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--fresh-ink);
+  }
+
+  .stage-rail h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 2rem;
+    line-height: 1.05;
+    margin-top: 0.15rem;
+  }
+
+  .stage-when {
+    margin-top: 0.5rem;
+    font-size: 0.9375rem;
+    color: var(--ink-3);
+  }
+
+  .stage-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(2.5rem, 5vw, 3.5rem);
+    min-width: 0;
+  }
+
+  h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  /* Flow */
+
+  .flow {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1.75rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .node {
+    position: relative;
+    display: grid;
+    align-content: center;
+    gap: 0.15rem;
+    min-height: 5rem;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    background: var(--surface);
+    line-height: 1.25;
+  }
+
+  .node strong {
+    font-size: 1rem;
+  }
+
+  .node span {
+    font-size: 0.875rem;
+    color: var(--ink-3);
+  }
+
+  .node.is-key {
+    border-color: var(--fresh);
+    box-shadow: inset 0 3px 0 var(--fresh);
+  }
+
+  .node:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: calc(-1.75rem + 4px);
+    width: calc(1.75rem - 8px);
+    height: 2px;
+    background: var(--ink-3);
+  }
+
+  .node:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    top: calc(50% - 4px);
+    right: calc(-1.75rem + 4px);
+    border-left: 7px solid var(--ink-3);
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    transform: translateY(-0.5px);
+  }
+
+  /* Matrix */
+
+  .matrix {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr) minmax(0, 1fr);
+    border-top: 1px solid var(--rule);
+  }
+
+  .matrix > * {
+    padding: 1.1rem 1.25rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .mx-corner {
+    padding: 0;
+  }
+
+  .mx-col {
+    font-weight: 600;
+    display: grid;
+    align-content: end;
+    line-height: 1.3;
+  }
+
+  .mx-col span {
+    font-weight: 400;
+    font-size: 0.9375rem;
+    color: var(--ink-3);
+  }
+
+  .mx-row {
+    padding-left: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.375rem;
+    line-height: 1.2;
+  }
+
+  .mx-cell {
+    border-left: 1px solid var(--rule);
+  }
+
+  .mx-cell h4 {
+    font-size: 1.0625rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .mx-cell p:not(.mx-tag) {
+    color: var(--ink-2);
+    font-size: 1rem;
+  }
+
+  .mx-tag {
+    display: none;
+  }
+
+  /* Fidelity */
+
+  .fidelity ul {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin: 1.1rem 0 1rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .fidelity li {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .fidelity .tile {
+    --tile-w: 18px;
+    --tile-h: 40px;
+    margin-top: 0.2rem;
+  }
+
+  .fidelity strong {
+    font-size: 1.0625rem;
+  }
+
+  .fidelity li p {
+    color: var(--ink-2);
+    font-size: 1rem;
+  }
+
+  /* Chain of thought */
+
+  .cot h4 {
+    margin-bottom: 1.1rem;
+  }
+
+  .cot-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+    gap: 1.75rem;
+    align-items: start;
+  }
+
+  .cot-grid img {
+    width: 100%;
+    border-radius: var(--radius);
+  }
+
+  .cot-steps {
+    display: grid;
+    gap: 1.1rem;
+    padding: 0;
+    list-style: none;
+    counter-reset: cot;
+  }
+
+  .cot-steps li {
+    counter-increment: cot;
+    position: relative;
+    padding-left: 2.4rem;
+  }
+
+  .cot-steps li::before {
+    content: counter(cot);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1.7rem;
+    height: 1.7rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--ink);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+
+  .cot-step {
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+
+  .cot-steps dl {
+    display: grid;
+    gap: 0.15rem;
+    font-size: 0.9688rem;
+  }
+
+  .cot-steps dl > div {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  .cot-steps dt {
+    color: var(--ink-3);
+  }
+
+  .cot-steps dd {
+    color: var(--ink);
+  }
+
+  .cot figcaption {
+    margin-top: 1rem;
+  }
+
+  /* Evidence capsule */
+
+  .capsule {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: clamp(1.25rem, 3vw, 2rem);
+  }
+
+  .cap-scroll {
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+  }
+
+  .cap-diagram {
+    position: relative;
+    min-width: 600px;
+    padding-top: 3.4rem;
+  }
+
+  .cap-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.1rem;
+  }
+
+  .cap-zone {
+    flex: var(--n) 1 0;
+    min-width: 0;
+  }
+
+  .cap-zone p {
+    margin-top: 0.55rem;
+    font-size: 0.875rem;
+    color: var(--ink-2);
+    line-height: 1.25;
+  }
+
+  .cap-tiles {
+    display: flex;
+    gap: 5px;
+  }
+
+  .cap-tiles .tile {
+    --tile-h: 44px;
+    flex: 1 1 0;
+    width: auto;
+    max-width: 30px;
+  }
+
+  .z-gone .tile {
+    opacity: 0.6;
+  }
+
+  .z-gone p {
+    color: var(--ink-3);
+  }
+
+  .cap-mark {
+    position: relative;
+    align-self: stretch;
+    width: 2px;
+    margin-top: -10px;
+    background: var(--ink);
+  }
+
+  .cap-mark span {
+    position: absolute;
+    bottom: -1.6rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .cap-bracket {
+    position: absolute;
+    top: 1.9rem;
+    height: 10px;
+    border: 2px solid var(--fresh);
+    border-bottom: 0;
+    border-radius: 3px 3px 0 0;
+  }
+
+  .cap-bracket span {
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--fresh-ink);
+    white-space: nowrap;
+  }
+
+  .capsule figcaption {
+    margin-top: 2.6rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule-soft);
+  }
+
+  /* Modes */
+
+  .modes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.75rem 2.5rem;
+    padding: 0;
+    list-style: none;
+    counter-reset: mode;
+  }
+
+  .modes li {
+    counter-increment: mode;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .modes h4::before {
+    content: counter(mode) '. ';
+    color: var(--fresh-ink);
+  }
+
+  .modes p {
+    margin-top: 0.35rem;
+    color: var(--ink-2);
+  }
+
+  @media (max-width: 1080px) {
+    .flow {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.25rem;
+      max-width: 22rem;
+    }
+
+    .node {
+      min-height: 0;
+    }
+
+    .node:not(:last-child)::after {
+      top: auto;
+      right: auto;
+      left: 1.5rem;
+      bottom: calc(-1.25rem + 3px);
+      width: 2px;
+      height: calc(1.25rem - 6px);
+    }
+
+    .node:not(:last-child)::before {
+      top: auto;
+      right: auto;
+      left: calc(1.5rem - 4px);
+      bottom: calc(-1.25rem + 2px);
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 7px solid var(--ink-3);
+      border-bottom: 0;
+      transform: none;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .stage {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .stage-rail {
+      position: static;
+    }
+
+    .fidelity ul,
+    .cot-grid,
+    .modes {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 720px) {
+    .matrix {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .mx-corner,
+    .mx-col,
+    .mx-row {
+      display: none;
+    }
+
+    .mx-cell {
+      border-left: 0;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .mx-tag {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--fresh-ink);
+      margin-bottom: 0.2rem;
+    }
+  }
+</style>
+
+<script>
+  // Size the capsule bracket to span pre-event, degradation and recovery zones.
+  const fit = () => {
+    document.querySelectorAll<HTMLElement>('.cap-diagram').forEach((d) => {
+      const pre = d.querySelector<HTMLElement>('.z-pre');
+      const post = d.querySelector<HTMLElement>('.z-post');
+      const br = d.querySelector<HTMLElement>('.cap-bracket');
+      if (!pre || !post || !br) return;
+      const left = pre.offsetLeft;
+      const right = post.offsetLeft + post.querySelector<HTMLElement>('.cap-tiles')!.offsetWidth;
+      br.style.left = `${left - 4}px`;
+      br.style.width = `${right - left + 8}px`;
+    });
+  };
+  fit();
+  window.addEventListener('resize', fit);
+  document.fonts?.ready.then(fit);
+</script>

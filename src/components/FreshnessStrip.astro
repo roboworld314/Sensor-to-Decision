@@ -1,0 +1,381 @@
+---
+// Schematic of the paper's core claim: under full-rate FIFO the frame being
+// processed lags far behind "now"; SenseGuard triages frames so it stays close.
+// B = bypass, R = reduced, F = full fidelity.
+const sgPattern = 'BBFBRBBBFBBRBBBBFBRBBBFB'.split('');
+const repeats = 4;
+const fifoTiles = Array.from({ length: sgPattern.length * repeats });
+const sgTiles = Array.from({ length: repeats }).flatMap(() => sgPattern);
+const cls = { B: 'is-bypass', R: 'is-reduced', F: '' } as const;
+---
+
+<figure class="fresh" aria-labelledby="fresh-cap">
+  <div class="fresh-bar">
+    <p class="fresh-title">Which frame is the model working on?</p>
+    <button class="fresh-toggle" type="button" aria-pressed="false">Pause animation</button>
+  </div>
+
+  <div class="lanes">
+    <div class="now" aria-hidden="true"><span>now</span></div>
+
+    <div class="lane lane-fifo">
+      <p class="lane-label">
+        <strong>Full-rate FIFO</strong>
+        <span>Every frame, full detail, in arrival order</span>
+      </p>
+      <div class="track" aria-hidden="true">
+        <div class="window">
+          <div class="zone-queue"></div>
+          <div class="tape">
+            {fifoTiles.map(() => <i class="tile is-plain"></i>)}
+          </div>
+          <div class="zone-past"></div>
+        </div>
+        <div class="head"><span>processing</span></div>
+        <div class="age"><span>decision age</span></div>
+      </div>
+    </div>
+
+    <div class="lane lane-sg">
+      <p class="lane-label">
+        <strong>SenseGuard</strong>
+        <span>Each frame bypassed, reduced, or kept in full</span>
+      </p>
+      <div class="track" aria-hidden="true">
+        <div class="window">
+          <div class="zone-queue"></div>
+          <div class="tape">
+            {sgTiles.map((s) => <i class:list={['tile', cls[s as keyof typeof cls]]}></i>)}
+          </div>
+          <div class="zone-past"></div>
+        </div>
+        <div class="head"><span>processing</span></div>
+        <div class="age"><span>decision age</span></div>
+      </div>
+    </div>
+  </div>
+
+  <figcaption id="fresh-cap">
+    <ul class="legend">
+      <li><i class="tile is-plain"></i>Frame at full rate</li>
+      <li><i class="tile"></i>Kept in full</li>
+      <li><i class="tile is-reduced"></i>Reduced detail</li>
+      <li><i class="tile is-bypass"></i>Bypassed; last result reused</li>
+    </ul>
+    <p class="caption">
+      Schematic. Frames enter on the right and age as they move left. A full-rate FIFO queue processes every frame in
+      order, so its output describes a scene that has already moved on. Across 20 detectors this costs 0.44
+      present-world accuracy on average against a scene-current upper bound (paper, Fig. 1). SenseGuard skips
+      near-duplicates and shrinks low-information frames, so the model works close to now.
+    </p>
+  </figcaption>
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.fresh').forEach((fig) => {
+    const btn = fig.querySelector<HTMLButtonElement>('.fresh-toggle');
+    btn?.addEventListener('click', () => {
+      const paused = fig.toggleAttribute('data-paused');
+      btn.setAttribute('aria-pressed', String(paused));
+      btn.textContent = paused ? 'Play animation' : 'Pause animation';
+    });
+  });
+</script>
+
+<style>
+  .fresh {
+    --pitch: 18px;
+    --period: calc(var(--pitch) * 24);
+    --label-col: 13.5rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: clamp(1.25rem, 3vw, 2rem);
+  }
+
+  .fresh-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .fresh-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.5rem;
+    line-height: 1.1;
+  }
+
+  .fresh-toggle {
+    flex: none;
+    min-height: 36px;
+    padding: 0.3rem 0.8rem;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--ink-2);
+    font: 500 0.875rem/1 var(--font-body);
+    cursor: pointer;
+  }
+
+  .fresh-toggle:hover {
+    border-color: var(--ink-2);
+    color: var(--ink);
+  }
+
+  .lanes {
+    position: relative;
+    display: grid;
+    gap: 2.6rem;
+    padding-top: 1.4rem;
+  }
+
+  .lane {
+    display: grid;
+    grid-template-columns: var(--label-col) minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .lane-label {
+    display: grid;
+    gap: 0.1rem;
+    line-height: 1.3;
+  }
+
+  .lane-label strong {
+    font-size: 1.125rem;
+  }
+
+  .lane-label span {
+    font-size: 0.875rem;
+    color: var(--ink-3);
+  }
+
+  .lane-fifo {
+    --head: 28%;
+    --age-color: var(--stale);
+    --age-ink: var(--stale-ink);
+    --queue: var(--stale-wash);
+  }
+
+  .lane-sg {
+    --head: 87%;
+    --age-color: var(--fresh);
+    --age-ink: var(--fresh-ink);
+    --queue: var(--fresh-wash);
+  }
+
+  .track {
+    position: relative;
+    height: 40px;
+  }
+
+  .tape {
+    position: absolute;
+    inset: 7px auto 7px 0;
+    display: flex;
+    gap: calc(var(--pitch) - 12px);
+    animation: flow 14.4s linear infinite;
+    will-change: transform;
+  }
+
+  .window {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .tape .tile {
+    --tile-h: 26px;
+  }
+
+  @keyframes flow {
+    to {
+      transform: translateX(calc(-1 * var(--period)));
+    }
+  }
+
+  .fresh[data-paused] .tape {
+    animation-play-state: paused;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tape {
+      animation: none;
+    }
+
+    .fresh-toggle {
+      display: none;
+    }
+  }
+
+  .zone-queue {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--head);
+    right: 0;
+    background: var(--queue);
+    border-radius: 0 3px 3px 0;
+  }
+
+  .zone-past {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: var(--head);
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.3));
+  }
+
+  .head {
+    position: absolute;
+    top: -6px;
+    bottom: -6px;
+    left: var(--head);
+    width: 2px;
+    margin-left: -1px;
+    background: var(--ink);
+  }
+
+  .head span {
+    position: absolute;
+    right: 8px;
+    top: -1.35rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  .now {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 2px;
+    background: var(--ink);
+    z-index: 2;
+  }
+
+  .now span {
+    position: absolute;
+    top: -0.3rem;
+    right: 8px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  /* The "now" rule spans only the track column, not the labels. */
+  .lanes > .now {
+    left: auto;
+  }
+
+  .age {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: var(--head);
+    right: 0;
+    height: 8px;
+    border-top: 2px solid var(--age-color);
+  }
+
+  .age::before,
+  .age::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    width: 2px;
+    height: 10px;
+    background: var(--age-color);
+  }
+
+  .age::before {
+    left: 0;
+  }
+
+  .age::after {
+    right: 0;
+  }
+
+  .age span {
+    position: absolute;
+    top: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--age-ink);
+    white-space: nowrap;
+  }
+
+  .lane-sg .age span {
+    left: auto;
+    right: calc(100% + 8px);
+    top: -0.65rem;
+    transform: none;
+  }
+
+  figcaption {
+    display: grid;
+    gap: 0.9rem;
+    margin-top: 2.6rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--rule-soft);
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    padding: 0;
+    list-style: none;
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+  }
+
+  .legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .legend .tile {
+    --tile-w: 9px;
+    --tile-h: 18px;
+  }
+
+  @media (max-width: 720px) {
+    .lanes {
+      gap: 3.4rem;
+      padding-top: 0;
+    }
+
+    .lane {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.9rem;
+    }
+
+    .lanes > .now {
+      display: none;
+    }
+
+    .track::after {
+      content: '';
+      position: absolute;
+      top: -6px;
+      bottom: -6px;
+      right: 0;
+      width: 2px;
+      background: var(--ink);
+    }
+
+    .lane-sg {
+      --head: 80%;
+    }
+  }
+</style>

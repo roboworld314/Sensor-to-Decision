@@ -1,0 +1,147 @@
+---
+import { links } from '../data/paper';
+import { asset } from '../lib/asset';
+
+const setup = [
+  {
+    term: 'Datasets',
+    desc: 'V2X-Radar: synchronized camera and LiDAR with 3D annotations across sunny, rainy, daytime, dusk and night conditions, plus synthetic fog. RovaX: collected on the robotic vehicle under vibration, terrain changes, sensor noise and dynamic agents.',
+  },
+  {
+    term: 'Detectors',
+    desc: 'RF-DETR and YOLOv10-M for camera, chosen from 20 detectors across four families; CenterPoint for LiDAR, chosen over PointPillars and SECOND. All held fixed during evaluation.',
+  },
+  {
+    term: 'Baselines',
+    desc: 'Full processing; fixed-threshold FD+DS; OneAdapt and SmartAdapt for camera; VALO and MURAL for LiDAR. Same streams, input rates, splits, hardware and metrics, with no numbers carried over from the original papers.',
+  },
+  {
+    term: 'Compute',
+    desc: 'AMD EPYC 7543 server with two RTX 3090 GPUs (24 GB each) and 80 GB RAM. The online pipeline runs on a single GPU to reflect onboard limits; offline training uses both.',
+  },
+];
+---
+
+<section class="section" id="deployment" aria-labelledby="deploy-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="deploy-h">Real-world deployment</h2>
+      <p class="lede">
+        The RovaX robotic vehicle carries a roof-mounted LiDAR and cameras over uneven ground, cluttered brick paths and
+        a campus driveway, where mobility-induced vibration corrupts both sensors.
+      </p>
+    </div>
+
+    <figure class="route">
+      <div class="figure-frame">
+        <img
+          src={asset('images/fig5-rovax-route.webp')}
+          width="1600"
+          height="761"
+          loading="lazy"
+          alt="Aerial map of a campus with the outdoor route drawn in red from Start, along a driveway, to End, with an inset of the robot on a wooded path. Two photos show the robot on an uneven dirt surface and on a cluttered brick roadway with metal bars."
+        />
+      </div>
+      <figcaption class="caption">Paper, Fig. 5. The outdoor route and two of the test surfaces.</figcaption>
+    </figure>
+
+    <div class="media-pair">
+      <figure>
+        <div class="frame-16x9">
+          <iframe
+            src={links.outdoorRun}
+            title="Outdoor testbed run of the RovaX vehicle"
+            allow="autoplay; fullscreen"
+            allowfullscreen
+            loading="lazy"></iframe>
+        </div>
+        <figcaption class="caption">Outdoor run: data collection along the route.</figcaption>
+      </figure>
+      <figure>
+        <img
+          class="frame-16x9"
+          src={asset('images/indoor-testbed.jpg')}
+          width="1024"
+          height="768"
+          loading="lazy"
+          alt="Indoor urban-mobility mat with lanes, crosswalks and cones. Small robotic cars share the mat with RovaX, and tree branches lie across a crosswalk in front of it."
+        />
+        <figcaption class="caption">Indoor run: an urban-mobility mat shared with other robotic vehicles, with branches as obstacles.</figcaption>
+      </figure>
+    </div>
+
+    <dl class="setup">
+      {
+        setup.map((s) => (
+          <div>
+            <dt>{s.term}</dt>
+            <dd>{s.desc}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<style>
+  .route {
+    margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  .route .figure-frame {
+    padding: clamp(0.5rem, 1.5vw, 1rem);
+  }
+
+  .media-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .frame-16x9 {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: #000;
+  }
+
+  img.frame-16x9 {
+    object-fit: cover;
+  }
+
+  .frame-16x9 iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .setup {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem 3rem;
+    margin-top: clamp(3rem, 6vw, 4.5rem);
+  }
+
+  .setup > div {
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .setup dt {
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+
+  .setup dd {
+    color: var(--ink-2);
+    max-width: var(--measure);
+  }
+
+  @media (max-width: 760px) {
+    .media-pair,
+    .setup {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

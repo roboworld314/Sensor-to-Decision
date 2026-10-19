@@ -1,0 +1,76 @@
+---
+import { links } from '../data/paper';
+---
+
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <div>
+      <p class="foot-name">SenseGuard</p>
+      <p class="foot-note">
+        This page accompanies an anonymous submission. Author names, affiliations, code and data will be added after
+        review.
+      </p>
+    </div>
+    <ul class="foot-links">
+      <li><a href={links.appendix} target="_blank" rel="noopener">Appendix</a></li>
+      <li><a href={links.demoView} target="_blank" rel="noopener">Demo video (Google Drive)</a></li>
+      <li><span>Code after review</span></li>
+      <li><span>Dataset after review</span></li>
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .foot {
+    padding: 3.5rem 0 4rem;
+    background: var(--night);
+    color: var(--night-text);
+  }
+
+  .foot-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 2rem 4rem;
+    align-items: start;
+  }
+
+  .foot-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 2rem;
+    line-height: 1;
+    color: #fff;
+  }
+
+  .foot-note {
+    margin-top: 0.75rem;
+    max-width: 34rem;
+    color: var(--night-muted);
+  }
+
+  .foot-links {
+    display: grid;
+    gap: 0.5rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .foot-links a {
+    color: var(--night-fresh);
+    font-weight: 600;
+  }
+
+  .foot-links a:hover {
+    color: #fff;
+  }
+
+  .foot-links span {
+    color: var(--night-muted);
+  }
+
+  @media (max-width: 640px) {
+    .foot-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

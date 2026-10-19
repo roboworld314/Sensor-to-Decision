@@ -1,0 +1,520 @@
+---
+import Tradeoff from './charts/Tradeoff.astro';
+import AdmissionChart from './charts/AdmissionChart.astro';
+import StageBars, { type Panel } from './charts/StageBars.astro';
+import Dumbbell from './charts/Dumbbell.astro';
+import {
+  admission,
+  cameraRovax,
+  comparison,
+  lidarDetection,
+  lidarLocalization,
+  retraining,
+  stages,
+} from '../data/paper';
+
+const keyFigures = [
+  {
+    label: 'Camera mAP@50 on the robot',
+    before: 52.81,
+    after: 72.89,
+    unit: '%',
+    max: 100,
+    delta: '+20.1 points',
+    source: 'RovaX, RF-DETR (Table III)',
+  },
+  {
+    label: 'Camera inference latency',
+    before: 17.4,
+    after: 12.0,
+    unit: 'ms',
+    max: 17.4,
+    delta: '31% lower',
+    source: 'Open-source benchmark, RF-DETR (Table III)',
+  },
+  {
+    label: 'LiDAR trajectory error (ATE)',
+    before: 3.45,
+    after: 0.87,
+    unit: 'm',
+    max: 3.45,
+    delta: '75% lower',
+    source: 'Open-source benchmark, KISS-ICP (Table V)',
+  },
+  {
+    label: 'LiDAR data footprint on the robot',
+    before: 2.31,
+    after: 1.58,
+    unit: 'GB',
+    max: 2.31,
+    delta: '32% smaller',
+    source: 'RovaX (Table V)',
+  },
+];
+
+const fmt = (v: number, unit: string) => (unit === '%' ? `${v.toFixed(1)}%` : `${v} ${unit}`);
+
+const panels: Panel[] = [
+  {
+    title: 'Camera mAP@50, RF-DETR',
+    note: 'RovaX vehicle, higher is better',
+    unit: '%',
+    max: 100,
+    values: Object.fromEntries(stages.map((s) => [s, cameraRovax['RF-DETR'][s].map50])) as Panel['values'],
+  },
+  {
+    title: 'Camera mAP@50, YOLOv10-M',
+    note: 'RovaX vehicle, higher is better',
+    unit: '%',
+    max: 100,
+    values: Object.fromEntries(stages.map((s) => [s, cameraRovax['YOLOv10-M'][s].map50])) as Panel['values'],
+  },
+  {
+    title: 'LiDAR mAP@50, CenterPoint',
+    note: 'Critical objects on RovaX, higher is better',
+    unit: '%',
+    max: 100,
+    values: Object.fromEntries(stages.map((s) => [s, lidarDetection[s].map50])) as Panel['values'],
+  },
+  {
+    title: 'LiDAR trajectory error (ATE)',
+    note: 'Open-source benchmark, meters, lower is better',
+    unit: 'm',
+    max: 4,
+    digits: 2,
+    values: Object.fromEntries(stages.map((s) => [s, lidarLocalization.open[s].ate])) as Panel['values'],
+  },
+];
+
+const camAnchors = {
+  'Full processing': 'l',
+  'Fixed FD+DS': 'b',
+  OneAdapt: 'r',
+  SmartAdapt: 'a',
+  SenseGuard: 'r',
+} as const;
+const lidarAnchors = {
+  'Full processing': 'l',
+  'Fixed FD+DS': 'r',
+  VALO: 'b',
+  MURAL: 'a',
+  SenseGuard: 'r',
+} as const;
+---
+
+<section class="section" id="results" aria-labelledby="results-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="results-h">Results</h2>
+      <p class="lede">
+        Evaluated on an open-source benchmark and on the RovaX vehicle under vibration, terrain changes, sensor noise
+        and moving agents. Detector architectures stay fixed, so the gains come from what SenseGuard feeds them and what
+        it keeps for retraining.
+      </p>
+    </div>
+
+    <ul class="kf-row">
+      {
+        keyFigures.map((k) => (
+          <li class="kf">
+            <p class="kf-label">{k.label}</p>
+            <p class="kf-value">{fmt(k.after, k.unit)}</p>
+            <p class="kf-delta">
+              {k.delta}
+              <span> from {fmt(k.before, k.unit)}</span>
+            </p>
+            <div class="kf-bars" aria-hidden="true">
+              <span class="kf-bar is-base" style={`width:${(k.before / k.max) * 100}%`} />
+              <span class="kf-bar is-ours" style={`width:${(k.after / k.max) * 100}%`} />
+            </div>
+            <p class="kf-src">{k.source}</p>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="caption kf-note">Gray: full-rate processing. Teal: SenseGuard (FD+DS).</p>
+
+    <!-- A. Against adaptive baselines -->
+    <div class="block">
+      <div class="block-text">
+        <h3>Most accurate, at competitive latency</h3>
+        <p>
+          Against full processing, fixed-threshold filtering and modality-matched adaptive methods on identical
+          datasets, hardware, backbones and input rates, SenseGuard has the highest scenario-averaged mAP in both
+          modalities. On camera it is 8 points above OneAdapt; on LiDAR it is 6.3 points above MURAL and within 0.3 ms
+          of VALO, the fastest method.
+        </p>
+      </div>
+      <div class="sc-pair">
+        <Tradeoff
+          title="Camera"
+          data={comparison.camera}
+          x={[8, 24]}
+          y={[65, 90]}
+          xTicks={[8, 12, 16, 20, 24]}
+          yTicks={[65, 70, 75, 80, 85, 90]}
+          anchors={camAnchors}
+        />
+        <Tradeoff
+          title="LiDAR"
+          data={comparison.lidar}
+          x={[8, 20]}
+          y={[65, 85]}
+          xTicks={[8, 12, 16, 20]}
+          yTicks={[65, 70, 75, 80, 85]}
+          anchors={lidarAnchors}
+        />
+      </div>
+      <details class="data-details">
+        <summary>Show the numbers</summary>
+        <div class="table-scroll">
+          <table class="data-table">
+            <caption>Paper, Table VIII. Pipeline-level comparison, averaged over scenarios.</caption>
+            <thead>
+              <tr><th scope="col">Strategy</th><th scope="col">Camera mAP (%)</th><th scope="col">Camera latency (ms)</th><th scope="col">LiDAR strategy</th><th scope="col">LiDAR mAP (%)</th><th scope="col">LiDAR latency (ms)</th></tr>
+            </thead>
+            <tbody>
+              {
+                comparison.camera.map((c, i) => {
+                  const l = comparison.lidar[i];
+                  return (
+                    <tr class:list={{ 'is-ours': c.ours }}>
+                      <th scope="row">{c.name} {c.ref}</th>
+                      <td>{c.map.toFixed(2)}</td>
+                      <td>{c.latency.toFixed(2)}</td>
+                      <td style="text-align:left">{l.name} {l.ref}</td>
+                      <td>{l.map.toFixed(2)}</td>
+                      <td>{l.latency.toFixed(2)}</td>
+                    </tr>
+                  );
+                })
+              }
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+
+    <!-- B. Admission control -->
+    <div class="block">
+      <div class="block-text">
+        <h3>Fresher decisions from smarter admission</h3>
+        <p>
+          Adding semantic context and then a learned policy to frame admission cuts the mean time from sensor capture to
+          planner from 136 ms to 63 ms, while keeping more of the safety-critical frames. The VLM reviews only 9.6% of
+          inputs; its amortized cost is included in the latency and decision age.
+        </p>
+      </div>
+      <AdmissionChart />
+      <details class="data-details">
+        <summary>Show the numbers</summary>
+        <div class="table-scroll">
+          <table class="data-table">
+            <caption>Paper, Table IV. Admission-control ablation on the open-source benchmark.</caption>
+            <thead>
+              <tr><th scope="col">Variant</th><th scope="col">mAP (%)</th><th scope="col">Recall (%)</th><th scope="col">Critical kept (%)</th><th scope="col">Mean decision age (ms)</th><th scope="col">Perception latency (ms)</th><th scope="col">VLM query rate (%)</th></tr>
+            </thead>
+            <tbody>
+              {
+                admission.map((r) => (
+                  <tr class:list={{ 'is-ours': r.ours }}>
+                    <th scope="row">{r.variant}</th>
+                    <td>{r.map}</td>
+                    <td>{r.recall}</td>
+                    <td>{r.criticalKeep}</td>
+                    <td>{r.decisionAge}</td>
+                    <td>{r.latency}</td>
+                    <td>{r.vlmRate ?? 'n/a'}</td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+
+    <!-- C. Stage by stage -->
+    <div class="block">
+      <div class="block-text">
+        <h3>Each stage helps; both together help most</h3>
+        <p>
+          Removing temporal redundancy (FD) mainly cuts global drift; removing spatial redundancy (DS) mainly steadies
+          local geometry. Combined, they give the best detection and localization on both platforms and the lowest latency
+          in most settings, with larger gains in the noisier field data.
+        </p>
+      </div>
+      <StageBars panels={panels} />
+      <details class="data-details">
+        <summary>Show the numbers</summary>
+        <div class="table-scroll">
+          <table class="data-table">
+            <caption>Paper, Table III. Camera perception on the RovaX vehicle.</caption>
+            <thead>
+              <tr><th scope="col">Pipeline</th><th scope="col">Model</th><th scope="col">mAP@50 (%)</th><th scope="col">Precision (%)</th><th scope="col">Recall (%)</th><th scope="col">F1 (%)</th><th scope="col">Latency (ms)</th><th scope="col">Data (GB)</th></tr>
+            </thead>
+            <tbody>
+              {
+                stages.flatMap((s) =>
+                  (['RF-DETR', 'YOLOv10-M'] as const).map((m) => {
+                    const v = cameraRovax[m][s];
+                    return (
+                      <tr class:list={{ 'is-ours': s === 'FD+DS' }}>
+                        <th scope="row">{s}</th>
+                        <td style="text-align:left">{m}</td>
+                        <td>{v.map50}</td>
+                        <td>{v.precision}</td>
+                        <td>{v.recall}</td>
+                        <td>{v.f1}</td>
+                        <td>{v.latency}</td>
+                        <td>{v.data}</td>
+                      </tr>
+                    );
+                  }),
+                )
+              }
+            </tbody>
+          </table>
+        </div>
+        <div class="table-scroll">
+          <table class="data-table">
+            <caption>Paper, Table VI. LiDAR detection of critical objects on RovaX (CenterPoint).</caption>
+            <thead>
+              <tr><th scope="col">Pipeline</th><th scope="col">mAP@25 (%)</th><th scope="col">mAP@50 (%)</th><th scope="col">Precision (%)</th><th scope="col">Recall (%)</th><th scope="col">Latency (ms)</th></tr>
+            </thead>
+            <tbody>
+              {
+                stages.map((s) => {
+                  const v = lidarDetection[s];
+                  return (
+                    <tr class:list={{ 'is-ours': s === 'FD+DS' }}>
+                      <th scope="row">{s}</th>
+                      <td>{v.map25}</td>
+                      <td>{v.map50}</td>
+                      <td>{v.precision}</td>
+                      <td>{v.recall}</td>
+                      <td>{v.latency}</td>
+                    </tr>
+                  );
+                })
+              }
+            </tbody>
+          </table>
+        </div>
+        <div class="table-scroll">
+          <table class="data-table">
+            <caption>Paper, Table V. LiDAR localization and efficiency.</caption>
+            <thead>
+              <tr><th scope="col">Pipeline</th><th scope="col">Dataset</th><th scope="col">ATE (m)</th><th scope="col">ARE (°/frame)</th><th scope="col">RPE (m)</th><th scope="col">RTE (m/100 m)</th><th scope="col">RRE (°/100 m)</th><th scope="col">Latency (ms)</th><th scope="col">Data (GB)</th></tr>
+            </thead>
+            <tbody>
+              {
+                (['open', 'rovax'] as const).flatMap((d) =>
+                  stages.map((s) => {
+                    const v = lidarLocalization[d][s];
+                    return (
+                      <tr class:list={{ 'is-ours': s === 'FD+DS' }}>
+                        <th scope="row">{s}</th>
+                        <td style="text-align:left">{d === 'open' ? 'Open-source' : 'RovaX'}</td>
+                        <td>{v.ate}</td>
+                        <td>{v.are}</td>
+                        <td>{v.rpe}</td>
+                        <td>{v.rte}</td>
+                        <td>{v.rre}</td>
+                        <td>{v.latency}</td>
+                        <td>{v.data}</td>
+                      </tr>
+                    );
+                  }),
+                )
+              }
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+
+    <!-- D. Adaptive training -->
+    <div class="block">
+      <div class="block-text">
+        <h3>Retraining on failure episodes beats routine logs</h3>
+        <p>
+          Same starting checkpoints, same amount of retained data, same retraining budget, same held-out tests; only the
+          data selection differs. Failure-aligned capsules improve accuracy in all eight scenarios for both detectors,
+          with the largest gains under rain, night and high motion.
+        </p>
+      </div>
+      <Dumbbell />
+      <details class="data-details">
+        <summary>Show the numbers</summary>
+        <div class="table-scroll">
+          <table class="data-table">
+            <caption>Paper, Table VII. Post-retraining perception, routine logging (R) versus adaptive training (A).</caption>
+            <thead>
+              <tr>
+                <th scope="col">Scenario</th><th scope="col">Model</th>
+                <th scope="col">Accuracy R</th><th scope="col">Accuracy A</th>
+                <th scope="col">Recall R</th><th scope="col">Recall A</th>
+                <th scope="col">FPR R</th><th scope="col">FPR A</th>
+                <th scope="col">Confidence R</th><th scope="col">Confidence A</th>
+                <th scope="col">Latency R (ms)</th><th scope="col">Latency A (ms)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                retraining['RF-DETR'].flatMap((row, i) =>
+                  (['RF-DETR', 'YOLOv10-M'] as const).map((m) => {
+                    const r = retraining[m][i];
+                    return (
+                      <tr>
+                        <th scope="row">{row.scenario}</th>
+                        <td style="text-align:left">{m}</td>
+                        <td>{r.accuracy[0]}</td><td>{r.accuracy[1]}</td>
+                        <td>{r.recall[0]}</td><td>{r.recall[1]}</td>
+                        <td>{r.fpr[0]}</td><td>{r.fpr[1]}</td>
+                        <td>{r.confidence[0]}</td><td>{r.confidence[1]}</td>
+                        <td>{r.latency[0]}</td><td>{r.latency[1]}</td>
+                      </tr>
+                    );
+                  }),
+                )
+              }
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<style>
+  .kf-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .kf {
+    display: grid;
+    align-content: start;
+    gap: 0.35rem;
+    padding-top: 1rem;
+    border-top: 2px solid var(--ink);
+  }
+
+  .kf-label {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--ink-2);
+    min-height: 2.6em;
+    line-height: 1.3;
+  }
+
+  .kf-value {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: clamp(2.5rem, 4.2vw, 3.25rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  .kf-delta {
+    font-weight: 600;
+    color: var(--fresh-ink);
+  }
+
+  .kf-delta span {
+    font-weight: 400;
+    color: var(--ink-3);
+  }
+
+  .kf-bars {
+    display: grid;
+    gap: 4px;
+    margin: 0.4rem 0 0.2rem;
+  }
+
+  .kf-bar {
+    height: 6px;
+    border-radius: 0 3px 3px 0;
+  }
+
+  .kf-bar.is-base {
+    background: var(--mark-muted);
+  }
+
+  .kf-bar.is-ours {
+    background: var(--fresh);
+  }
+
+  .kf-src {
+    font-size: 0.8125rem;
+    color: var(--ink-3);
+  }
+
+  .kf-note {
+    margin-top: 1.25rem;
+  }
+
+  .block {
+    margin-top: clamp(4rem, 8vw, 6rem);
+    padding-top: 2rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .block-text {
+    display: grid;
+    grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+    gap: 1rem 3rem;
+    margin-bottom: 2.25rem;
+  }
+
+  .block-text h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.75rem;
+    line-height: 1.1;
+  }
+
+  .block-text p {
+    max-width: var(--measure);
+    color: var(--ink-2);
+  }
+
+  .sc-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(2rem, 5vw, 4rem);
+  }
+
+  .data-details .table-scroll + .table-scroll {
+    margin-top: 1rem;
+  }
+
+  @media (max-width: 1000px) {
+    .kf-row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2.25rem 1.5rem;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .block-text,
+    .sc-pair {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .sc-pair {
+      gap: 3rem;
+    }
+  }
+
+  @media (max-width: 440px) {
+    .kf-value {
+      font-size: 2.25rem;
+    }
+  }
+</style>

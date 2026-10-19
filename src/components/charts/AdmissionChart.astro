@@ -1,0 +1,251 @@
+---
+// Admission-control ablation (paper, Table IV): decision age as bars from zero,
+// critical-frame retention as dots on a 90–100% scale. Rows share one label column.
+import { admission } from '../../data/paper';
+
+const ageMax = 160;
+const ageTicks = [0, 40, 80, 120, 160];
+const keepRange: [number, number] = [90, 100];
+const keepTicks = [90, 95, 100];
+const keepPos = (v: number) => ((v - keepRange[0]) / (keepRange[1] - keepRange[0])) * 100;
+---
+
+<div class="adm">
+  <div class="adm-head">
+    <span></span>
+    <p>Mean decision age (ms), lower is better</p>
+    <p>Critical frames kept (%)</p>
+  </div>
+
+  {
+    admission.map((r) => (
+      <div class:list={['adm-row', { 'is-ours': r.ours }]}>
+        <p class="adm-name">
+          {r.variant}
+          {r.ours && <span>SenseGuard</span>}
+        </p>
+        <div class="adm-track">
+          <span
+            class="bar"
+            style={`width:${(r.decisionAge / ageMax) * 100}%`}
+            tabindex="0"
+            role="img"
+            aria-label={`${r.variant}: mean decision age ${r.decisionAge} ms`}
+            data-tip-value={`${r.decisionAge} ms`}
+            data-tip-label={`${r.variant}, mean decision age`}
+          />
+          {
+            r.decisionAge / ageMax > 0.45 ? (
+              <span class="bar-val is-inside" style={`right:calc(${100 - (r.decisionAge / ageMax) * 100}% + 8px)`}>
+                {r.decisionAge} ms
+              </span>
+            ) : (
+              <span class="bar-val" style={`left:calc(${(r.decisionAge / ageMax) * 100}% + 8px)`}>
+                {r.decisionAge} ms
+              </span>
+            )
+          }
+        </div>
+        <div class="adm-track adm-dots">
+          {keepTicks.map((t) => <i class="tick" style={`left:${keepPos(t)}%`} />)}
+          <span
+            class="dot"
+            style={`left:${keepPos(r.criticalKeep)}%`}
+            tabindex="0"
+            role="img"
+            aria-label={`${r.variant}: ${r.criticalKeep}% of critical frames kept`}
+            data-tip-value={`${r.criticalKeep}%`}
+            data-tip-label={`${r.variant}, critical frames kept`}
+          />
+          <span class="dot-val" style={`left:${keepPos(r.criticalKeep)}%`}>
+            {r.criticalKeep}%
+          </span>
+        </div>
+      </div>
+    ))
+  }
+
+  <div class="adm-axis">
+    <span></span>
+    <div class="adm-track">
+      {ageTicks.map((t) => <span class="ax" style={`left:${(t / ageMax) * 100}%`}>{t}</span>)}
+    </div>
+    <div class="adm-track">
+      {keepTicks.map((t) => <span class="ax" style={`left:${keepPos(t)}%`}>{t}</span>)}
+    </div>
+  </div>
+</div>
+
+<style>
+  .adm {
+    --name-col: 11rem;
+    display: grid;
+    gap: 0;
+  }
+
+  .adm-head,
+  .adm-row,
+  .adm-axis {
+    display: grid;
+    grid-template-columns: var(--name-col) minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  .adm-head p {
+    font-size: 0.8125rem;
+    color: var(--ink-3);
+    padding-bottom: 0.6rem;
+  }
+
+  .adm-row {
+    min-height: 3.1rem;
+    border-top: 1px solid var(--rule-soft);
+  }
+
+  .adm-name {
+    font-size: 1rem;
+    line-height: 1.2;
+    color: var(--ink-2);
+  }
+
+  .adm-name span {
+    display: block;
+    font-size: 0.8125rem;
+    color: var(--fresh-ink);
+    font-weight: 600;
+  }
+
+  .is-ours .adm-name {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .adm-track {
+    position: relative;
+    height: 100%;
+    min-height: 2rem;
+  }
+
+  .bar {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    height: 18px;
+    margin-top: -9px;
+    background: var(--mark-muted);
+    border-radius: 0 4px 4px 0;
+  }
+
+  .is-ours .bar {
+    background: var(--fresh);
+  }
+
+  .bar:hover,
+  .bar:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 1px;
+  }
+
+  .bar-val {
+    position: absolute;
+    white-space: nowrap;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.875rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-2);
+  }
+
+  /* Long bars carry their value inside, in ink on the light gray fill (about 7:1). */
+  .bar-val.is-inside {
+    color: var(--ink);
+    font-weight: 600;
+    pointer-events: none;
+  }
+
+  .tick {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--rule-soft);
+  }
+
+  .dot {
+    position: absolute;
+    top: 50%;
+    width: 12px;
+    height: 12px;
+    margin: -6px 0 0 -6px;
+    border-radius: 50%;
+    background: var(--mark-quiet);
+    box-shadow: 0 0 0 2px var(--surface);
+    z-index: 1;
+  }
+
+  .dot::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
+  }
+
+  .is-ours .dot {
+    background: var(--fresh);
+  }
+
+  .dot:hover,
+  .dot:focus-visible {
+    box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--ink);
+    outline: none;
+  }
+
+  .dot-val {
+    position: absolute;
+    top: 50%;
+    transform: translate(calc(-100% - 12px), -50%);
+    font-size: 0.875rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-2);
+  }
+
+  .adm-axis {
+    border-top: 1px solid var(--rule);
+  }
+
+  .adm-axis .adm-track {
+    min-height: 1.8rem;
+  }
+
+  .ax {
+    position: absolute;
+    top: 0.35rem;
+    transform: translateX(-50%);
+    font-size: 0.8125rem;
+    color: var(--ink-3);
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (max-width: 720px) {
+    .adm-head,
+    .adm-row,
+    .adm-axis {
+      gap: 0.25rem 1.25rem;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    }
+
+    .adm-head > span,
+    .adm-axis > span {
+      display: none;
+    }
+
+    .adm-name {
+      grid-column: 1 / -1;
+      padding-top: 0.6rem;
+    }
+
+    .adm-track {
+      min-height: 2.2rem;
+    }
+  }
+</style>

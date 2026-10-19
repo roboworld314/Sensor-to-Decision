@@ -1,299 +1,136 @@
 ---
-// Hero.astro — FINAL FIXED VERSION
+import FreshnessStrip from './FreshnessStrip.astro';
+import { links } from '../data/paper';
+import { asset } from '../lib/asset';
 ---
 
-<section id="hero" class="hero-section">
-
-  <div class="hero-inner">
-
-    <!-- LEFT CONTENT -->
-    <div class="hero-left">
-
-      <h1 class="hero-title">
-        SenseGuard: Sensor-to-Decision Adaptation and Learning for Reliable Agentic Robots
+<section class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div class="hero-text">
+      <h1>
+        <span class="hero-name">SenseGuard</span>
+        <span class="hero-title">Sensor-to-Decision Adaptation and Learning for Reliable Agentic Robots</span>
       </h1>
-
-      <p class="hero-subtitle">
-        Real-Time Adaptive Perception Decision Making under Vibration and Resource Constraints
+      <p class="hero-lede">
+        A robot can run an accurate detector at low per-frame latency and still act on the past. SenseGuard keeps the
+        evidence behind each decision fresh: online, it drops low-value camera and LiDAR data before it clogs the
+        pipeline; offline, it keeps the moments where perception failed so retraining targets them.
       </p>
-
-      <!-- Paper Box -->
-      <div class="paper-box">
-
-        <div class="paper-left">
-          <span class="paper-icon">📄</span>
-          <span class="paper-title">Supplementary Materials</span>
-        </div>
-
-        <div class="paper-links">
-
-          <!-- Appendix -->
-          <a href="https://drive.google.com/file/d/1adc8mrF3CoUz2dJ_2IxYwd5p2cFx412H/view"
-             target="_blank" class="paper-btn paper-btn-primary">
-            <svg class="btn-icon" viewBox="0 0 24 24">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12V8z"/>
-              <polyline points="14 2 14 8 20 8"/>
-            </svg>
-            Appendix
-          </a>
-
-          <!-- Code -->
-          <a href="#" class="paper-btn paper-btn-secondary"
-             onclick="alert('We will publish soon!'); return false;">
-            <svg class="btn-icon" viewBox="0 0 24 24">
-              <polyline points="16 18 22 12 16 6"/>
-              <polyline points="8 6 2 12 8 18"/>
-            </svg>
-            Code
-          </a>
-
-          <!-- Dataset -->
-          <a href="#" class="paper-btn paper-btn-secondary"
-             onclick="alert('We will publish soon!'); return false;">
-            <svg class="btn-icon" viewBox="0 0 24 24">
-              <ellipse cx="12" cy="5" rx="9" ry="3"/>
-              <path d="M3 5v6c0 1.6 4 3 9 3s9-1.4 9-3V5"/>
-            </svg>
-            Dataset
-          </a>
-
-          <!-- Video -->
-          <a href="https://drive.google.com/file/d/1BV0f012GT49ySYrE-zComIcFRSKspdmL/preview"
-             class="paper-btn paper-btn-primary">
-            <svg class="btn-icon" viewBox="0 0 24 24">
-              <polygon points="23 7 16 12 23 17"/>
-              <rect x="1" y="5" width="15" height="14" rx="2"/>
-            </svg>
-            Demo Video
-          </a>
-
-        </div> <!-- ✅ CLOSE paper-links -->
-
-      </div> <!-- ✅ CLOSE paper-box -->
-
-    </div> <!-- ✅ CLOSE hero-left -->
-
-
-    <!-- RIGHT VISUAL -->
-    <div class="hero-right">
-
-      <div class="vehicle-wrapper">
-
-        <div class="road"></div>
-
-        <img 
-          src="https://lh3.googleusercontent.com/d/1Tc_J8SAASOFz-OovA0bAbX3_7NNMOSZW"
-          alt="Autonomous Vehicle"
-          class="vehicle"
-        />
-
+      <div class="actions">
+        <a class="btn btn-primary" href="#demo">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13l10.5-6.5z" /></svg>
+          Watch the demo
+        </a>
+        <a class="btn" href={links.appendix} target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"
+            ><path d="M14 3H6.5A1.5 1.5 0 0 0 5 4.5v15A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V8z" /><path
+              d="M14 3v5h5M8.5 13h7M8.5 16.5h7"></path></svg
+          >
+          Appendix
+        </a>
       </div>
+      <p class="hero-note">
+        Anonymous authors. Demo and supplementary material for a paper under review; code and data will be released
+        after review.
+      </p>
+    </div>
 
-    </div> <!-- ✅ CLOSE hero-right -->
+    <figure class="hero-photo">
+      <img
+        src={asset('images/robot-brick-path.jpg')}
+        width="1400"
+        height="1050"
+        alt="The RovaX robotic vehicle, carrying a roof-mounted LiDAR and a stereo camera, faces the camera on a brick path. Metal bars lie across the path in front of it."
+        fetchpriority="high"
+      />
+      <figcaption class="caption">RovaX test vehicle. Metal bars across the brick path shake the sensors as it drives over them.</figcaption>
+    </figure>
+  </div>
 
-  </div> <!-- ✅ CLOSE hero-inner -->
-
+  <div class="wrap hero-strip">
+    <FreshnessStrip />
+  </div>
 </section>
 
 <style>
+  .hero {
+    padding: clamp(32px, 4.5vw, 64px) 0 var(--section-space);
+  }
 
-/* ===== HERO BASE ===== */
-.hero-section {
-  padding: 2.5rem 2rem 1.8rem;
-  background: linear-gradient(135deg, #f7f5f2, #ece9e3);
-}
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: clamp(32px, 5vw, 72px);
+    align-items: end;
+  }
 
-/* ===== GRID ===== */
-.hero-inner {
-  max-width: 1100px;
-  margin: auto;
+  h1 {
+    display: grid;
+    gap: 1rem;
+  }
 
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  align-items: center;
-  gap: 1.8rem;
-}
-
-/* ===== LEFT ===== */
-.hero-left {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* ===== TITLE ===== */
-.hero-title {
-  font-size: 2.2rem;
-  line-height: 1.2;
-
-  background: linear-gradient(135deg, #1a2740, #2f4a85);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* ===== SUBTITLE ===== */
-.hero-subtitle {
-  margin-top: 0.6rem;
-  font-size: 1.02rem;
-  color: #5c667a;
-}
-
-/* ===== PAPER BOX ===== */
-.paper-box {
-  margin-top: 1.5rem;
-  
-  padding: 0.5rem 1.4rem;  
-  width: 100%;
-  max-width: 750px;   /* 🔥 controls how wide it goes */
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.6rem;
-
-  border-radius: 12px;
-  background: rgba(255,255,255,0.75);
-  backdrop-filter: blur(10px);
-
-  border: 1px solid rgba(0,0,0,0.05);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
-
-  transition: 0.25s ease;
-}
-
-.paper-box:hover {
-  transform: translateY(-2px);
-}
-
-/* ===== BUTTONS ===== */
-/* ICON */
-.btn-icon {
-  width: 14px;
-  height: 14px;
-  stroke: currentColor;
-  stroke-width: 1.8;
-  fill: none;
-}
-
-/* BUTTON BASE */
-.paper-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-
-  padding: 0.4rem 0.85rem;
-  border-radius: 8px;
-  font-size: 0.78rem;
-
-  transition: all 0.25s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-/* PRIMARY */
-.paper-btn-primary {
-  background: linear-gradient(135deg, #1f2f54, #2f4a85);
-  color: white;
-}
-
-/* PRIMARY HOVER */
-.paper-btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(47,74,133,0.35);
-}
-
-/* SECONDARY */
-.paper-btn-secondary {
-  border: 1px solid #d6dbe4;
-  color: #3a445a;
-  background: white;
-}
-
-/* SECONDARY HOVER */
-.paper-btn-secondary:hover {
-  background: #223253;
-  color: white;
-  border-color: #223253;
-  transform: translateY(-2px);
-}
-
-/* ===== RIGHT VEHICLE ===== */
-.hero-right {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* ===== VEHICLE SYSTEM ===== */
-.vehicle-wrapper {
-  position: relative;
-  width: 220px;
-  height: 120px;
-  overflow: hidden;
-
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-}
-
-/* ROAD */
-.road {
-  position: absolute;
-  bottom: 12px;
-  width: 100%;
-  height: 3px;
-
-  background: repeating-linear-gradient(
-    to right,
-    #bbb,
-    #bbb 20px,
-    transparent 20px,
-    transparent 40px
-  );
-
-  animation: roadMove 1.2s linear infinite;
-}
-
-/* CAR */
-.vehicle {
-  position: absolute;
-  bottom: 18px;
-  left: -120px;
-  width: 150px;
-
-  animation: drive 6s linear infinite;
-}
-
-/* ===== ANIMATIONS ===== */
-@keyframes drive {
-  from { left: -120px; }
-  to { left: 240px; }
-}
-
-@keyframes roadMove {
-  from { background-position: 0; }
-  to { background-position: 40px; }
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-  .hero-inner {
-    grid-template-columns: 1fr;
+  .hero-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(4.25rem, 11.5vw, 9.25rem);
+    line-height: 0.82;
+    letter-spacing: -0.025em;
   }
 
   .hero-title {
-    font-size: 1.8rem;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.6rem, 2.9vw, 2.35rem);
+    line-height: 1.08;
+    color: var(--ink-2);
+    max-width: 22em;
   }
 
-  .vehicle-wrapper {
-    width: 180px;
-    height: 100px;
+  .hero-lede {
+    margin-top: 1.4rem;
+    max-width: 38rem;
+    font-size: clamp(1.0625rem, 1.4vw, 1.1875rem);
+    line-height: 1.6;
+    color: var(--ink-2);
   }
 
-  .vehicle {
-    width: 120px;
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1.6rem;
   }
-}
 
+  .hero-note {
+    margin-top: 1rem;
+    max-width: 38rem;
+    font-size: 0.9375rem;
+    color: var(--ink-3);
+  }
+
+  .hero-photo img {
+    width: 100%;
+    aspect-ratio: 4 / 3.2;
+    object-fit: cover;
+    object-position: 50% 30%;
+    border-radius: var(--radius);
+  }
+
+  .hero-strip {
+    margin-top: clamp(40px, 4.5vw, 64px);
+  }
+
+  @media (max-width: 900px) {
+    .hero-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .hero-photo {
+      max-width: 560px;
+    }
+
+    .hero-photo img {
+      aspect-ratio: 4 / 3;
+    }
+  }
 </style>

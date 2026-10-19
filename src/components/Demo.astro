@@ -1,0 +1,149 @@
+---
+import { chapters, links } from '../data/paper';
+
+const fmt = (t: number) => `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`;
+---
+
+<section class="demo" id="demo" aria-labelledby="demo-h">
+  <div class="wrap">
+    <div class="demo-head">
+      <h2 id="demo-h">Demo</h2>
+      <p>
+        The 90-second walkthrough: the staleness gap, the pipeline, frame-by-frame retention decisions on real driving
+        footage, the RovaX deployment, and the results.
+      </p>
+    </div>
+
+    <div class="demo-grid">
+      <div class="player">
+        <iframe
+          src={links.demoEmbed}
+          title="SenseGuard demo video"
+          allow="autoplay; fullscreen"
+          allowfullscreen
+          loading="lazy"></iframe>
+      </div>
+
+      <div class="chapters">
+        <h3>In this video</h3>
+        <ol>
+          {
+            chapters.map((c) => (
+              <li>
+                <span class="time">{fmt(c.t)}</span>
+                <span>{c.label}</span>
+              </li>
+            ))
+          }
+        </ol>
+        <a class="open" href={links.demoView} target="_blank" rel="noopener">Open in Google Drive</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .demo {
+    padding: var(--section-space) 0;
+    background: var(--night);
+    color: var(--night-text);
+  }
+
+  .demo-head {
+    display: grid;
+    grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+    gap: 1rem 3rem;
+    align-items: end;
+    margin-bottom: 2.25rem;
+  }
+
+  h2 {
+    color: #fff;
+  }
+
+  .demo-head p {
+    max-width: 44rem;
+    color: var(--night-text);
+  }
+
+  .demo-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 18rem;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .player {
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .player iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .chapters h3 {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--night-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  ol {
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--night-2);
+  }
+
+  li {
+    display: grid;
+    grid-template-columns: 2.6rem minmax(0, 1fr);
+    gap: 0.5rem;
+    padding: 0.42rem 0;
+    border-bottom: 1px solid var(--night-2);
+    font-size: 0.9375rem;
+    line-height: 1.35;
+  }
+
+  .time {
+    font-variant-numeric: tabular-nums;
+    color: var(--night-fresh);
+  }
+
+  .open {
+    display: inline-block;
+    margin-top: 1rem;
+    color: var(--night-fresh);
+    font-weight: 600;
+  }
+
+  .open:hover {
+    color: #fff;
+  }
+
+  @media (max-width: 960px) {
+    .demo-head,
+    .demo-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    ol {
+      columns: 2;
+      column-gap: 1.5rem;
+    }
+
+    li {
+      break-inside: avoid;
+    }
+  }
+
+  @media (max-width: 560px) {
+    ol {
+      columns: 1;
+    }
+  }
+</style>

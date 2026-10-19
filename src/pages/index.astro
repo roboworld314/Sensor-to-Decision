@@ -1,43 +1,27 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import SiteNav from '../components/SiteNav.astro';
 import Hero from '../components/Hero.astro';
-import ProblemStatement from '../components/ProblemStatement.astro';
-import ImageShowcase from '../components/ImageShowcase.astro';
-import ContentParagraphs from '../components/ContentParagraphs.astro';
-import DemoVideo from '../components/DemoVideo.astro';
-import Datacollection from '../components/Datacollection.astro';
-import Footer from '../components/Footer.astro';
-
-const pageTitle = "SenseGuard";
+import Demo from '../components/Demo.astro';
+import Problem from '../components/Problem.astro';
+import Method from '../components/Method.astro';
+import Results from '../components/Results.astro';
+import Deployment from '../components/Deployment.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 ---
 
-<Layout title={pageTitle}>
-  <!-- 1. Title -->
-  <Hero />
-
-  <hr class="section-divider" />
-
-  <!-- 2. Problem Statement -->
-  <ProblemStatement />
-
-  <hr class="section-divider" />
-
-  <!-- 3. Images (2/3 groups) -->
-  
-
-  <hr class="section-divider" />
-  <Datacollection />
- <DemoVideo />
-  <!-- 4. Additional Paragraphs -->
-  <ContentParagraphs />
-
-  <hr class="section-divider" />
-
- 
- 
-
-  <hr class="section-divider" />
-
-  <!-- 6. Appendix Link -->
-  
+<Layout
+  title="SenseGuard: Sensor-to-Decision Adaptation and Learning for Reliable Agentic Robots"
+  description="Demo and results for SenseGuard, which keeps robot perception anchored to fresh sensor evidence by triaging camera and LiDAR frames online and retaining failure episodes for targeted retraining."
+>
+  <SiteNav />
+  <main>
+    <Hero />
+    <Demo />
+    <Problem />
+    <Method />
+    <Results />
+    <Deployment />
+  </main>
+  <SiteFooter />
 </Layout>

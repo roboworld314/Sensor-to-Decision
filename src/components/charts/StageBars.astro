@@ -1,0 +1,191 @@
+---
+// Stage-wise ablation as small multiples (paper, Tables III, V, VI).
+// Ordinal teal: baseline gray, one stage light teal, both stages full teal.
+import { stages, type Stage } from '../../data/paper';
+
+export interface Panel {
+  title: string;
+  note: string;
+  unit: string;
+  max: number;
+  values: Record<Stage, number>;
+  digits?: number;
+}
+
+interface Props {
+  panels: Panel[];
+}
+
+const { panels } = Astro.props;
+const tone = (s: Stage) => (s === 'Baseline' ? 'is-base' : s === 'FD+DS' ? 'is-both' : 'is-one');
+---
+
+<div class="sb">
+  <ul class="sb-legend">
+    <li><i class="sw is-base"></i>Full-rate baseline</li>
+    <li><i class="sw is-one"></i>One stage: frame deduplication (FD) or downsampling (DS)</li>
+    <li><i class="sw is-both"></i>Both stages (FD+DS)</li>
+  </ul>
+
+  <div class="sb-grid">
+    {
+      panels.map((p) => (
+        <figure class="sb-panel">
+          <figcaption>
+            <strong>{p.title}</strong>
+            <span>{p.note}</span>
+          </figcaption>
+          <div class="sb-plot">
+            {stages.map((s) => {
+              const v = p.values[s];
+              const txt = v.toFixed(p.digits ?? 1);
+              return (
+                <div class="sb-col">
+                  <span class="sb-val">{txt}</span>
+                  <span
+                    class:list={['sb-bar', tone(s)]}
+                    style={`height:${(v / p.max) * 100}%`}
+                    tabindex="0"
+                    role="img"
+                    aria-label={`${p.title}, ${s}: ${txt} ${p.unit}`}
+                    data-tip-value={`${txt} ${p.unit}`}
+                    data-tip-label={`${s}, ${p.title}`}
+                  />
+                </div>
+              );
+            })}
+          </div>
+          <div class="sb-axis" aria-hidden="true">
+            {stages.map((s) => <span>{s}</span>)}
+          </div>
+        </figure>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .sb-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.5rem;
+    padding: 0;
+    margin-bottom: 1.5rem;
+    list-style: none;
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+  }
+
+  .sb-legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .sw {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+  }
+
+  .is-base {
+    background: var(--mark-muted);
+  }
+
+  .is-one {
+    background: var(--fresh-light);
+  }
+
+  .is-both {
+    background: var(--fresh);
+  }
+
+  .sb-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2rem;
+  }
+
+  .sb-panel figcaption {
+    display: grid;
+    gap: 0.1rem;
+    min-height: 3.2rem;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+
+  .sb-panel strong {
+    font-size: 1rem;
+  }
+
+  .sb-panel figcaption span {
+    font-size: 0.8125rem;
+    color: var(--ink-3);
+  }
+
+  .sb-plot {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2px;
+    height: 170px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .sb-col {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .sb-val {
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-2);
+    margin-bottom: 4px;
+    white-space: nowrap;
+  }
+
+  .sb-bar {
+    width: min(24px, 70%);
+    border-radius: 4px 4px 0 0;
+  }
+
+  .sb-bar:hover,
+  .sb-bar:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 1px;
+  }
+
+  .sb-axis {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2px;
+    margin-top: 0.4rem;
+  }
+
+  .sb-axis span {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--ink-3);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 1000px) {
+    .sb-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2.25rem 1.75rem;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .sb-grid {
+      gap: 2rem 1rem;
+    }
+
+    .sb-axis span {
+      font-size: 0.6875rem;
+    }
+  }
+</style>

@@ -1,0 +1,280 @@
+---
+// Routine logging vs adaptive training, per scenario (paper, Table VII).
+// Before -> after per item = dumbbell: gray dot for routine, teal for adaptive.
+import { retraining } from '../../data/paper';
+
+const range: [number, number] = [60, 96];
+const ticks = [60, 70, 80, 90];
+const pos = (v: number) => ((v - range[0]) / (range[1] - range[0])) * 100;
+const models = Object.keys(retraining) as (keyof typeof retraining)[];
+---
+
+<div class="db" data-model={models[0]}>
+  <div class="db-controls">
+    <div class="seg" role="group" aria-label="Detector">
+      {
+        models.map((m, i) => (
+          <button type="button" data-model={m} aria-pressed={i === 0 ? 'true' : 'false'}>
+            {m}
+          </button>
+        ))
+      }
+    </div>
+    <ul class="db-legend">
+      <li><i class="k k-r"></i>Routine logging</li>
+      <li><i class="k k-a"></i>Adaptive training (SenseGuard)</li>
+    </ul>
+  </div>
+
+  {
+    models.map((m, i) => (
+      <div class="db-plot" data-for={m} hidden={i !== 0}>
+        <div class="db-head">
+          <span />
+          <p>Post-retraining accuracy (%)</p>
+          <p class="db-gain-h">Gain</p>
+        </div>
+        {retraining[m].map((r) => {
+          const [a, b] = r.accuracy;
+          const gain = (b - a).toFixed(1);
+          return (
+            <div class="db-row">
+              <p class="db-name">{r.scenario}</p>
+              <div class="db-track">
+                {ticks.map((t) => (
+                  <i class="tick" style={`left:${pos(t)}%`} />
+                ))}
+                <span class="link" style={`left:${pos(a)}%;width:${pos(b) - pos(a)}%`} />
+                <span
+                  class="dot dot-r"
+                  style={`left:${pos(a)}%`}
+                  tabindex="0"
+                  role="img"
+                  aria-label={`${m}, ${r.scenario}, routine logging: ${a}%`}
+                  data-tip-value={`${a}%`}
+                  data-tip-label={`${r.scenario}, routine logging`}
+                />
+                <span
+                  class="dot dot-a"
+                  style={`left:${pos(b)}%`}
+                  tabindex="0"
+                  role="img"
+                  aria-label={`${m}, ${r.scenario}, adaptive training: ${b}%`}
+                  data-tip-value={`${b}%`}
+                  data-tip-label={`${r.scenario}, adaptive training`}
+                />
+              </div>
+              <p class="db-gain">+{gain}</p>
+            </div>
+          );
+        })}
+        <div class="db-axis">
+          <span />
+          <div class="db-track">
+            {ticks.map((t) => (
+              <span class="ax" style={`left:${pos(t)}%`}>
+                {t}
+              </span>
+            ))}
+          </div>
+          <span />
+        </div>
+      </div>
+    ))
+  }
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.db').forEach((root) => {
+    const buttons = root.querySelectorAll<HTMLButtonElement>('.seg button');
+    buttons.forEach((btn) =>
+      btn.addEventListener('click', () => {
+        const m = btn.dataset.model;
+        buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+        root.querySelectorAll<HTMLElement>('.db-plot').forEach((p) => (p.hidden = p.dataset.for !== m));
+      }),
+    );
+  });
+</script>
+
+<style>
+  .db-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .seg {
+    display: inline-flex;
+    padding: 3px;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+
+  .seg button {
+    min-height: 36px;
+    padding: 0.3rem 0.9rem;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--ink-2);
+    font: 500 0.9375rem/1 var(--font-body);
+    cursor: pointer;
+  }
+
+  .seg button[aria-pressed='true'] {
+    background: var(--ink);
+    color: #fff;
+  }
+
+  .db-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.5rem;
+    padding: 0;
+    list-style: none;
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+  }
+
+  .db-legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .k {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .k-r {
+    background: var(--mark-quiet);
+  }
+
+  .k-a {
+    background: var(--fresh);
+  }
+
+  .db-head,
+  .db-row,
+  .db-axis {
+    display: grid;
+    grid-template-columns: 8rem minmax(0, 1fr) 3.5rem;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .db-head p {
+    font-size: 0.8125rem;
+    color: var(--ink-3);
+    padding-bottom: 0.5rem;
+  }
+
+  .db-gain-h {
+    text-align: right;
+  }
+
+  .db-row {
+    min-height: 2.6rem;
+    border-top: 1px solid var(--rule-soft);
+  }
+
+  .db-name {
+    font-size: 1rem;
+    color: var(--ink-2);
+  }
+
+  .db-track {
+    position: relative;
+    height: 100%;
+    min-height: 2rem;
+  }
+
+  .tick {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--rule-soft);
+  }
+
+  .link {
+    position: absolute;
+    top: 50%;
+    height: 2px;
+    margin-top: -1px;
+    background: var(--fresh-light);
+  }
+
+  .dot {
+    position: absolute;
+    top: 50%;
+    width: 12px;
+    height: 12px;
+    margin: -6px 0 0 -6px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px var(--surface);
+    z-index: 1;
+  }
+
+  .dot::after {
+    content: '';
+    position: absolute;
+    inset: -7px;
+  }
+
+  .dot-r {
+    background: var(--mark-quiet);
+  }
+
+  .dot-a {
+    background: var(--fresh);
+  }
+
+  .dot:hover,
+  .dot:focus-visible {
+    box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--ink);
+    outline: none;
+  }
+
+  .db-gain {
+    text-align: right;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .db-axis {
+    border-top: 1px solid var(--rule);
+  }
+
+  .db-axis .db-track {
+    min-height: 1.8rem;
+  }
+
+  .ax {
+    position: absolute;
+    top: 0.35rem;
+    transform: translateX(-50%);
+    font-size: 0.8125rem;
+    color: var(--ink-3);
+  }
+
+  @media (max-width: 600px) {
+    .db-head,
+    .db-row,
+    .db-axis {
+      grid-template-columns: 5.6rem minmax(0, 1fr) 2.6rem;
+      gap: 0.75rem;
+    }
+
+    .db-name {
+      font-size: 0.875rem;
+    }
+  }
+</style>

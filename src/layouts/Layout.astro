@@ -1,109 +1,87 @@
 ---
 import '../styles/global.css';
+import { asset } from '../lib/asset';
 
-const { title = "CAV Black Box Demo" } = Astro.props;
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(asset('media/senseguard-demo-poster.jpg'), Astro.site);
 ---
+
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="CAV Black Box: Adaptive and Efficient Storage under Vibration — Demo Page" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content={Astro.generator} />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href={asset('favicon.svg')} />
+    <meta name="theme-color" content="#f3f5f7" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
-
-    <style is:global>
-      :root {
-        --color-primary: #1a1a1a;
-        --color-accent: #3498db;
-        --color-text-light: #666;
-        --radius-md: 12px;
-        --font-heading: 'DM Serif Display', serif;
-        --font-body: 'DM Sans', sans-serif;
-      }
-
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-
-      html, body {
-        overflow-x: hidden; /* Prevents horizontal scroll on mobile */
-        width: 100%;
-        background-color: #f8f9fa;
-        color: var(--color-primary);
-        font-family: var(--font-body);
-        line-height: 1.6;
-      }
-
-      main {
-        width: 100%;
-        max-width: 100%;
-        margin: 0;
-        padding: 0;
-      }
-
-      @media (max-width: 480px) {
-        main {
-          padding: 0;
-        }
-      }
-
-      @media (min-width: 481px) and (max-width: 768px) {
-        main {
-          padding: 0;
-        }
-      }
-
-      @media (min-width: 769px) {
-        main {
-          padding: 0;
-        }
-      }
-
-      /* Animation Base State */
-      .reveal {
-        opacity: 0;
-        transform: translateY(30px);
-        transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-      }
-
-      .reveal.visible {
-        opacity: 1;
-        transform: translateY(0);
-      }
-
-      @media (max-width: 768px) {
-        main {
-          padding: 1rem 1rem;
-        }
-      }
-    </style>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="generator" content={Astro.generator} />
   </head>
   <body>
-    <main>
-      <slot />
-    </main>
+    <slot />
 
     <script>
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('visible');
-            }
-          });
-        },
-        { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
-      );
+      // One shared tooltip for every chart mark carrying data-tip-value.
+      // Labels are inserted with textContent; tooltips only repeat values that
+      // the "Show the numbers" tables already expose.
+      const tip = document.createElement('div');
+      tip.className = 'viz-tip';
+      tip.setAttribute('role', 'tooltip');
+      const value = document.createElement('strong');
+      const label = document.createElement('span');
+      tip.append(value, label);
+      document.body.append(tip);
 
-      document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+      const place = (x: number, y: number) => {
+        const half = tip.offsetWidth / 2 + 8;
+        const left = Math.min(Math.max(x, half), window.innerWidth - half);
+        tip.style.left = `${left}px`;
+        tip.style.top = `${Math.max(y, tip.offsetHeight + 16)}px`;
+      };
+
+      const show = (el: HTMLElement | SVGElement) => {
+        value.textContent = el.dataset.tipValue ?? '';
+        label.textContent = el.dataset.tipLabel ?? '';
+        tip.classList.add('is-on');
+      };
+      const hide = () => tip.classList.remove('is-on');
+
+      document.querySelectorAll<HTMLElement | SVGElement>('[data-tip-value]').forEach((el) => {
+        el.addEventListener('pointerenter', (e) => {
+          show(el);
+          place((e as PointerEvent).clientX, (e as PointerEvent).clientY);
+        });
+        el.addEventListener('pointermove', (e) => place((e as PointerEvent).clientX, (e as PointerEvent).clientY));
+        el.addEventListener('pointerleave', hide);
+        el.addEventListener('focus', () => {
+          show(el);
+          const r = el.getBoundingClientRect();
+          place(r.left + r.width / 2, r.top);
+        });
+        el.addEventListener('blur', hide);
+      });
+      window.addEventListener('scroll', hide, { passive: true });
     </script>
   </body>
 </html>
