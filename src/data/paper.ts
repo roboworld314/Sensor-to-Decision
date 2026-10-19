@@ -2,7 +2,7 @@
 // Keep this file as the single source for every figure shown on the page.
 
 export const links = {
-  appendix: 'https://docs.google.com/document/d/1nBlfMJam7dIFd-WN8--bOoTcUOgZdPDv/edit?usp=sharing&rtpof=true&sd=true',
+  appendix: 'https://drive.google.com/file/d/1HjolU2SRdK2zmjIbNGkukV6gPZcx67-b/view?usp=sharing',
   demoEmbed: 'https://drive.google.com/file/d/1XRWZCU3bLo7atJKiWdfUJJ3iqj1ZRmAv/preview',
   demoView: 'https://drive.google.com/file/d/1XRWZCU3bLo7atJKiWdfUJJ3iqj1ZRmAv/view?usp=sharing',
   outdoorRun: 'https://drive.google.com/file/d/1XJ6RTKSLHpggS11d33h5RUC6NltZzXkD/preview',
